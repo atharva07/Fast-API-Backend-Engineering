@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from app.routers import test_cases
+from app.exceptions.handlers import generic_exception_handler
 
 app = FastAPI()
+
+app.add_exception_handler(
+    Exception,
+    generic_exception_handler
+)
 
 @app.get("/")
 def root():
@@ -9,6 +15,6 @@ def root():
 
 app.include_router(
     test_cases.router,
-    prefix="/api/test-cases",
+    prefix="/api",
     tags=["Test Cases"],
 )
