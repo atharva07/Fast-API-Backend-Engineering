@@ -1,6 +1,10 @@
-from sqlalchemy import String, Text, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import TYPE_CHECKING
+from sqlalchemy import String, Text, Integer, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
+
+if TYPE_CHECKING:
+    from app.db.models.project import Project
 
 class TestCase(Base):
     __tablename__ = "test_case"
@@ -30,7 +34,13 @@ class TestCase(Base):
         nullable=False
     )
 
-    project_id: Mapped[int] = mapped_column(
-        Integer,
+    # This is database level relationship
+    project_id: Mapped[int | None] = mapped_column(
+        ForeignKey("projects.id"),
         nullable=True
+    )
+
+    # This is ORM level relationship
+    project: Mapped["Project | None"] = relationship(
+        back_populates="test_case"
     )
