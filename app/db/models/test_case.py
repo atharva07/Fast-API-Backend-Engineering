@@ -5,6 +5,7 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.db.models.project import Project
+    from app.db.models.test_result import TestResult
 
 class TestCase(Base):
     __tablename__ = "test_case"
@@ -42,5 +43,9 @@ class TestCase(Base):
 
     # This is ORM level relationship
     project: Mapped["Project | None"] = relationship(
+        back_populates="test_case"
+    )
+
+    results: Mapped[list["TestResult"]] = relationship(
         back_populates="test_case"
     )
