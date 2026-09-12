@@ -1,80 +1,134 @@
-from fastapi import APIRouter, Header, HTTPException
-from app.models.test_case import TestCaseCreate, TestCaseResponse
+from typing import Annotated
+from fastapi import Depends, APIRouter, HTTPException
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from app.db.dependencies import get_db
+from app.db.models.test_case import TestCase
+from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
 
 router = APIRouter()
+DBSession = Annotated[Session, Depends(get_db)]
 
-@router.get("")
-def get_test_cases():
-    return {
-        "test_cases": [
-            {
-                "id": 1,
-                "name": "Login with valid credentials",
-                "status": "PASSED"
-            },
-            {
-                "id": 2,
-                "name": "Login with invalid password",
-                "status": "FAILED"
-            }
-        ]
-    }
+# Get Test Cases - GET
+@router.get(
+    "/",
+    response_model=list[TestCaseResponse],
+)
+def get_test_cases(db: DBSession):
+    test_cases = db.execute(
+        select(TestCase)
+    ).scalars().all()
 
-@router.post("", response_model=TestCaseResponse)
-def create_test_case(test_case: TestCaseCreate):
-    return {
-        "id": 1,
-        "name": test_case.name,
-        "description": test_case.description,
-        "priority": test_case.priority,
-        "status": test_case.status
-    }
+    return test_cases
 
-# Get specific test case by ID
-@router.get("test-cases/{test_case_id}")
-def get_test_case(test_case_id: int):
-    if test_case_id != 1:
+# Create Test Cases - POST
+@router.post(
+    "/",
+    response_model=TestCaseResponse,
+    status_code=201
+)
+def create_test_case(
+    test_case: TestCaseCreate,
+    db: DBSession
+):
+    # Here we create Database object, This creates an SQLAlchemy Object
+    db_test_case = TestCase(
+        name = test_case.name, 
+        description = test_case.description,
+        priority = test_case.priority.value,
+        status = "DRAFT",
+    )
+
+    # This starts tracking the object
+    db.add(db_test_case)
+    # This flushes the pending changes and commits the transaction
+    db.commit()
+    # Reloads the object from the database
+    db.refresh(db_test_case)
+
+    return db_test_case
+
+# Get Test Case by ID - GET
+@router.get(
+    "/{test_case_id}",
+    response_model=TestCaseResponse,
+)
+def get_test_case(
+    test_case_id: int,
+    db: DBSession
+):
+    test_case = db.execute(
+        select(TestCase)
+        .where(TestCase.id == test_case_id)
+    ).scalar_one_or_none()
+
+    if test_case is None:
         raise HTTPException(
-            status_code = 404,
-            detail = "Test case not found"
+            status_code=404,
+            detail="Test Case Not Found",
+        )
+    
+    return test_case
+
+# Update Test Case - PATCH / PUT
+@router.put(
+    "/{test_case_id}",
+    response_model=TestCaseResponse
+)
+def update_test_case(
+    test_case_id: int,
+    test_case: TestCaseUpdate,
+    db: DBSession,
+):
+    db_test_case = db.execute(
+        select(TestCase)
+        .where(TestCase.id == test_case_id)
+    ).scalar_one_or_none()
+
+    if test_case is None: 
+        raise HTTPException(
+            status_code=404,
+            detail="Test Case not Found",
         )
 
-    return {
-        "id": test_case_id,
-        "name": "Sample Test Case",
-    }
+    update_data = test_case.model_dump(
+        exclude_unset=True
+    )
 
-@router.get("test-cases/search")
-def search_test_case(
-    status: str | None = None,
-    page: int = 1,
-    limit: int = 10
+    for field, value in update_data.items():
+        if hasattr(value, "value"):
+            value = value.value
+
+        setattr(
+            db_test_case,
+            field,
+            value,
+        )
+
+    db.commit()
+    db.refresh(db_test_case)
+
+    return db_test_case
+
+# Delete Test Case - DELETE
+@router.delete(
+    "/{test_case_id}",
+    status_code=204
+)
+def delete_test_case(
+    test_case_id: int,
+    db: DBSession
 ):
-    return {
-        "status": status,
-        "message": "Searching Test Case"
-    }
+    db_test_case = db.execute(
+        select(TestCase)
+        .where(TestCase.id == test_case_id)
+    ).scalar_one_or_none()
 
-@router.get("test-cases/debug")
-def debug_request(x_request_id: str | None = Header(None)):
-    return {
-        "request_id": x_request_id
-    }
+    if db_test_case is None: 
+        raise HTTPException(
+            status_code=404,
+            detail="Test Case Not found",
+        )
 
-@router.post("/api/projects/{project_id}/test-cases")
-def create_tests_case(
-    project_id: int,
-    test_case: TestCaseCreate,
-    notify: bool = False,
-    x_request_id: str | None = Header(default=None),
-):
-    return {
-        "project_id": project_id,
-        "notify": notify,
-        "request_id": x_request_id,
-        "test_case": test_case
-    }
-
-@router.get("/error")
-def trigger_error():
-    raise Exception("This is a test exception")
+    db.delete(db_test_case)
+    db.commit()

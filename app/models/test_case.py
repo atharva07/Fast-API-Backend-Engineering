@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 class Priority(str, Enum):
     LOW = "LOW"
@@ -18,8 +18,16 @@ class TestCaseCreate(BaseModel):
     priority: Priority = Priority.MEDIUM
 
 class TestCaseResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     name: str
     description: str | None
     priority: Priority
     status: TestCaseStatus
+
+class TestCaseUpdate(BaseModel):
+    name: str | None = Field(default=None, min_length=3)
+    description: str | None = None
+    priority: Priority | None = None
+    status: TestCaseStatus | None = None
