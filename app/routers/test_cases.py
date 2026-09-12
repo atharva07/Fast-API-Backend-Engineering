@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.db.dependencies import get_db
 from app.db.models.test_case import TestCase
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
+from app.repositories.test_case import TestCaseRepository
 
 router = APIRouter()
 DBSession = Annotated[Session, Depends(get_db)]
@@ -15,9 +16,9 @@ DBSession = Annotated[Session, Depends(get_db)]
     response_model=list[TestCaseResponse],
 )
 def get_test_cases(db: DBSession):
-    test_cases = db.execute(
-        select(TestCase)
-    ).scalars().all()
+    repository = TestCaseRepository(db)
+
+    test_cases = repository.get_all()
 
     return test_cases
 
@@ -31,8 +32,9 @@ def create_test_case(
     test_case: TestCaseCreate,
     db: DBSession
 ):
+    repository = TestCaseRepository(db)
     # Here we create Database object, This creates an SQLAlchemy Object
-    db_test_case = TestCase(
+    test_case = TestCase(
         name = test_case.name, 
         description = test_case.description,
         priority = test_case.priority.value,
@@ -40,13 +42,13 @@ def create_test_case(
     )
 
     # This starts tracking the object
-    db.add(db_test_case)
+    repository.add(test_case)
     # This flushes the pending changes and commits the transaction
     db.commit()
     # Reloads the object from the database
-    db.refresh(db_test_case)
+    db.refresh(test_case)
 
-    return db_test_case
+    return test_case
 
 # Get Test Case by ID - GET
 @router.get(
@@ -57,10 +59,9 @@ def get_test_case(
     test_case_id: int,
     db: DBSession
 ):
-    test_case = db.execute(
-        select(TestCase)
-        .where(TestCase.id == test_case_id)
-    ).scalar_one_or_none()
+    repository = TestCaseRepository(db)
+
+    test_case = repository.get_by_id(test_case_id)
 
     if test_case is None:
         raise HTTPException(
@@ -80,6 +81,8 @@ def update_test_case(
     test_case: TestCaseUpdate,
     db: DBSession,
 ):
+    repository = TestCaseRepository(db)
+
     db_test_case = db.execute(
         select(TestCase)
         .where(TestCase.id == test_case_id)
@@ -119,16 +122,15 @@ def delete_test_case(
     test_case_id: int,
     db: DBSession
 ):
-    db_test_case = db.execute(
-        select(TestCase)
-        .where(TestCase.id == test_case_id)
-    ).scalar_one_or_none()
+    repository = TestCaseRepository(db)
+    
+    test_case = repository.get_by_id(test_case_id)
 
-    if db_test_case is None: 
+    if test_case is None: 
         raise HTTPException(
             status_code=404,
             detail="Test Case Not found",
         )
 
-    db.delete(db_test_case)
+    repository.delete(test_case)
     db.commit()
