@@ -2,7 +2,10 @@ from typing import Annotated
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.db.dependencies import get_db
+from app.db.dependencies import (
+    DBSession, 
+    get_test_case_service,
+)
 from app.db.models.test_case import TestCase
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
 from app.repositories.test_case import TestCaseRepository
@@ -10,7 +13,7 @@ from app.models.test_result import TestResultResponse
 from app.services.test_case import TestCaseService
 
 router = APIRouter()
-DBSession = Annotated[Session, Depends(get_db)]
+# DBSession = Annotated[Session, Depends(get_db)]
 
 # Get Test Cases - GET
 @router.get(
@@ -141,8 +144,10 @@ def delete_test_case(
 )
 def execute_test_case(
     test_case_id: int,
-    db: DBSession
+    service: TestCaseService = Depends(
+        get_test_case_service
+    )
 ):
-    service = TestCaseService(db)
-
-    return service.execute_test_case(test_case_id)
+    return service.execute_test_case(
+        test_case_id
+    )

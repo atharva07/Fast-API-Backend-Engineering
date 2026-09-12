@@ -7,9 +7,13 @@ from app.exceptions.test_case import (
 )
 
 class TestCaseService:
-    def __init__(self, db: Session):
+    def __init__(
+        self, 
+        db: Session,
+        repository: TestCaseRepository
+    ):
         self.db = db
-        self.respository = TestCaseRepository(db)
+        self.respository = repository
 
     def execute_test_case(
         self,
