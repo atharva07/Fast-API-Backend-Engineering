@@ -6,6 +6,8 @@ from app.db.dependencies import get_db
 from app.db.models.test_case import TestCase
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
 from app.repositories.test_case import TestCaseRepository
+from app.models.test_result import TestResultResponse
+from app.services.test_case import TestCaseService
 
 router = APIRouter()
 DBSession = Annotated[Session, Depends(get_db)]
@@ -83,10 +85,7 @@ def update_test_case(
 ):
     repository = TestCaseRepository(db)
 
-    db_test_case = db.execute(
-        select(TestCase)
-        .where(TestCase.id == test_case_id)
-    ).scalar_one_or_none()
+    db_test_case = repository.get_by_id(test_case_id)
 
     if test_case is None: 
         raise HTTPException(
@@ -134,3 +133,16 @@ def delete_test_case(
 
     repository.delete(test_case)
     db.commit()
+
+@router.post(
+    "/{test_case_id}/execute",
+    response_model=TestResultResponse,
+    status_code=201
+)
+def execute_test_case(
+    test_case_id: int,
+    db: DBSession
+):
+    service = TestCaseService(db)
+
+    return service.execute_test_case(test_case_id)

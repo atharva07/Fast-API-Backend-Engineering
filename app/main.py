@@ -1,12 +1,29 @@
 from fastapi import FastAPI
 from app.routers import test_cases
-from app.exceptions.handlers import generic_exception_handler
+from app.exceptions.handlers import (
+    generic_exception_handler,
+    test_case_not_found_handler,
+    test_case_not_executable_handler
+)
+from app.exceptions.test_case import (
+    TestCaseNotExecutableError, TestCaseNotFoundError
+)
 
 app = FastAPI()
 
 app.add_exception_handler(
     Exception,
     generic_exception_handler
+)
+
+app.add_exception_handler(
+    TestCaseNotFoundError,
+    test_case_not_found_handler
+)
+
+app.add_exception_handler(
+    TestCaseNotExecutableError,
+    test_case_not_executable_handler
 )
 
 @app.get("/")
