@@ -5,15 +5,19 @@ from app.repositories.test_case import TestCaseRepository
 from app.exceptions.test_case import (
     TestCaseNotExecutableError, TestCaseNotFoundError
 )
+from app.db.models.audit_log import Auditlog
+from app.repositories.audit_log import AuditLogRepository
 
 class TestCaseService:
     def __init__(
         self, 
         db: Session,
-        repository: TestCaseRepository
+        repository: TestCaseRepository,
+        audit_repository: AuditLogRepository
     ):
         self.db = db
         self.respository = repository
+        self.audit_repository = audit_repository
 
     def execute_test_case(
         self,
@@ -35,11 +39,23 @@ class TestCaseService:
 
         result = TestResult(
             test_case_id=test_case.id,
-            status="RUNIING"
+            status="RUNNING"
         )
 
         self.db.add(result)
-        self.db.commit()
-        self.db.refresh(result)
+
+        audit_log = Auditlog(
+            test_case_id=test_case.id,
+            action="TEST_EXECUTION_STARTED"
+        )
+
+        self.audit_repository.add(audit_log)
+
+        try:
+            self.db.commit()
+            self.db.refresh(result)
+        except Exception:
+            self.db.rollback()
+            raise
 
         return result

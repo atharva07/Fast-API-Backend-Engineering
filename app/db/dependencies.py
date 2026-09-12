@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.db.database import SessionLocal
 from app.repositories.test_case import TestCaseRepository
 from app.services.test_case import TestCaseService
+from app.repositories.audit_log import AuditLogRepository
 
 def get_db() -> Generator:
     db = SessionLocal()
@@ -24,11 +25,18 @@ def get_test_case_repository(
 ) -> TestCaseRepository:
     return TestCaseRepository(db)
 
+def get_audit_log_repository(
+    db: DBSession
+) -> AuditLogRepository:
+    return AuditLogRepository(db)
+
 def get_test_case_service(
     db: DBSession,
-    repository: TestCaseRepository = Depends(get_test_case_repository)
+    repository: TestCaseRepository = Depends(get_test_case_repository),
+    audit_repository: AuditLogRepository = Depends(get_audit_log_repository),
 ) -> TestCaseService:
     return TestCaseService(
         db=db,
-        repository=repository
+        repository=repository,
+        audit_repository=audit_repository
     )
