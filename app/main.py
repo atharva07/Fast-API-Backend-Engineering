@@ -3,8 +3,10 @@ from app.routers import test_cases
 from app.exceptions.handlers import (
     generic_exception_handler,
     test_case_not_found_handler,
-    test_case_not_executable_handler
+    test_case_not_executable_handler,
+    project_already_exists_handler
 )
+from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_case import (
     TestCaseNotExecutableError, TestCaseNotFoundError
 )
@@ -24,6 +26,11 @@ app.add_exception_handler(
 app.add_exception_handler(
     TestCaseNotExecutableError,
     test_case_not_executable_handler
+)
+
+app.add_exception_handler(
+    ProjectAlreadyExistsError,
+    project_already_exists_handler,
 )
 
 @app.get("/")

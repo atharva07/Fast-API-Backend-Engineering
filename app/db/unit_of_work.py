@@ -1,12 +1,14 @@
 from sqlalchemy.orm import Session
 from app.repositories.audit_log import AuditLogRepository
 from app.repositories.test_case import TestCaseRepository
+from app.repositories.project import ProjectRepository
 
 class UnitOfWork:
     def __init__(self, db: Session):
         self.db = db
         self.test_cases = TestCaseRepository(db)
         self.audit_logs = AuditLogRepository(db)
+        self.projects = ProjectRepository(db)
 
     def __enter__(self):
         return self
