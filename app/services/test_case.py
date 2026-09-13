@@ -7,23 +7,20 @@ from app.exceptions.test_case import (
 )
 from app.db.models.audit_log import Auditlog
 from app.repositories.audit_log import AuditLogRepository
+from app.db.unit_of_work import UnitOfWork
 
 class TestCaseService:
     def __init__(
         self, 
-        db: Session,
-        repository: TestCaseRepository,
-        audit_repository: AuditLogRepository
+        uow: UnitOfWork
     ):
-        self.db = db
-        self.respository = repository
-        self.audit_repository = audit_repository
+        self.uow = uow
 
     def execute_test_case(
         self,
         test_case_id: int,
     ) -> TestResult:
-        test_case = self.respository.get_by_id(
+        test_case = self.uow.test_cases.get_by_id(
             test_case_id
         )
 
@@ -42,20 +39,17 @@ class TestCaseService:
             status="RUNNING"
         )
 
-        self.db.add(result)
+        self.uow.db.add(result)
 
         audit_log = Auditlog(
             test_case_id=test_case.id,
             action="TEST_EXECUTION_STARTED"
         )
 
-        self.audit_repository.add(audit_log)
+        self.uow.audit_logs.add(audit_log)
 
-        try:
-            self.db.commit()
-            self.db.refresh(result)
-        except Exception:
-            self.db.rollback()
-            raise
+        self.uow.commit()
+
+        self.uow.db.refresh(result)
 
         return result

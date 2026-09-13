@@ -6,6 +6,7 @@ from app.db.database import SessionLocal
 from app.repositories.test_case import TestCaseRepository
 from app.services.test_case import TestCaseService
 from app.repositories.audit_log import AuditLogRepository
+from app.db.unit_of_work import UnitOfWork
 
 def get_db() -> Generator:
     db = SessionLocal()
@@ -30,13 +31,14 @@ def get_audit_log_repository(
 ) -> AuditLogRepository:
     return AuditLogRepository(db)
 
-def get_test_case_service(
+def get_unit_of_work(
     db: DBSession,
-    repository: TestCaseRepository = Depends(get_test_case_repository),
-    audit_repository: AuditLogRepository = Depends(get_audit_log_repository),
+) -> UnitOfWork:
+    return UnitOfWork(db)
+
+def get_test_case_service(
+    uow: UnitOfWork = Depends(get_unit_of_work),
 ) -> TestCaseService:
-    return TestCaseService(
-        db=db,
-        repository=repository,
-        audit_repository=audit_repository
+    return TestCaseService (
+        uow = uow
     )

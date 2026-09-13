@@ -76,7 +76,7 @@ def get_test_case(
     
     return test_case
 
-# Update Test Case - PATCH / PUT
+# Update Test Case - PATCH
 @router.put(
     "/{test_case_id}",
     response_model=TestCaseResponse
@@ -146,7 +146,7 @@ def execute_test_case(
     test_case_id: int,
     service: TestCaseService = Depends(
         get_test_case_service
-    )
+    ),
 ):
     return service.execute_test_case(
         test_case_id
