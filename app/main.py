@@ -10,6 +10,7 @@ from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_case import (
     TestCaseNotExecutableError, TestCaseNotFoundError
 )
+from app.routers.projects import router as project_router
 
 app = FastAPI()
 
@@ -41,4 +42,8 @@ app.include_router(
     test_cases.router,
     prefix="/api",
     tags=["Test Cases"],
+)
+
+app.include_router(
+    project_router
 )
