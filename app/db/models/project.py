@@ -33,3 +33,8 @@ class Project(Base):
         secondary=project_users,
         back_populates="projects"
     )
+
+    execution_timeout: Mapped[int] = mapped_column(
+        nullable=False,
+        default=3000,
+    )
