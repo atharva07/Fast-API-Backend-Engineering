@@ -6,7 +6,9 @@ DATABASE_URL = "postgresql+psycopg://localhost/qaforge"
 
 engine = create_engine(
     DATABASE_URL,
-    echo=True
+    echo=True,
+    pool_size=5,
+    max_overflow=2
 )
 
 class Base(DeclarativeBase):
