@@ -60,7 +60,7 @@ def replace_project(project_id: int, project: ProjectCreate, uow: UnitOfWork = D
 PATCH
 """
 @router.patch("/{project_id}", response_model=ProjectResponse)
-def update_project(project_id: int, project: ProjectCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def update_project(project_id: int, project: ProjectUpdate, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = ProjectService(uow)
 
     return service.update_project(
