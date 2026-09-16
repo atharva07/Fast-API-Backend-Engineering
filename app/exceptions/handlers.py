@@ -6,6 +6,7 @@ from app.exceptions.test_case import (
 )
 from app.exceptions.project import ProjectAlreadyExistsError
 
+# Generic Exception handler
 async def generic_exception_handler(
         request: Request,
         exc: Exception
@@ -20,6 +21,9 @@ async def generic_exception_handler(
         }
     )
 
+"""
+Exceptions realted to Test Case Module
+"""
 async def test_case_not_found_handler(
         request: Request,
         exc: TestCaseNotFoundError
@@ -48,6 +52,9 @@ async def test_case_not_executable_handler(
         },
     )
 
+"""
+Exceptions realted to Project Module
+"""
 async def project_already_exists_handler(
         request: Request,
         exc: ProjectAlreadyExistsError
@@ -57,6 +64,17 @@ async def project_already_exists_handler(
         content={
             "error": {
                 "code": "PROJECT_ALREADY_EXISTS",
+                "message": str(exc)
+            }
+        },
+    )
+
+async def project_not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content = {
+            "error": {
+                "code": "PROJECT_NOT_FOUND",
                 "message": str(exc)
             }
         },

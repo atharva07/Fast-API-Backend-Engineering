@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.models.project import (
     ProjectCreate,
-    ProjectResponse
+    ProjectResponse,
+    ProjectUpdate
 )
 from app.services.project import ProjectService
 
@@ -11,18 +12,72 @@ router = APIRouter(
     prefix="/api/projects",
     tags=["Projects"],
 )
-@router.post(
-    "/",
-    response_model=ProjectResponse,
-    status_code=201
-)
-def create_project(
-    project: ProjectCreate,
-    uow: UnitOfWork = Depends(get_unit_of_work)
-):
+
+"""
+POST Request
+"""
+@router.post("/", response_model=ProjectResponse, status_code=201)
+def create_project(project: ProjectCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = ProjectService(uow)
 
     return service.create_project(
         name=project.name,
         description=project.description,
     )
+
+"""
+GET Request
+"""
+@router.get("/", response_model=list[ProjectResponse])
+def get_projects(uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = ProjectService(uow)
+
+    return service.get_projects()
+
+"""
+GET by ID
+"""
+@router.get("/{project_id}", response_model=ProjectResponse)
+def get_project(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = ProjectService(uow)
+
+    return service.get_project(project_id)
+
+"""
+PUT
+"""
+@router.put("/{project_id}", response_model=ProjectResponse)
+def replace_project(project_id: int, project: ProjectCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = ProjectService(uow)
+
+    return service.replace_project(
+        project_id=project_id,
+        name=project.name,
+        description=project.description
+    )
+
+"""
+PATCH
+"""
+@router.patch("/{project_id}", response_model=ProjectResponse)
+def update_project(project_id: int, project: ProjectCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = ProjectService(uow)
+
+    return service.update_project(
+        project_id=project_id,  
+        name=project.name,
+        description=project.description
+    )
+
+"""
+DELETE
+"""
+@router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_project(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = ProjectService(uow)
+
+    service.delete_project(
+        project_id=project_id,  
+    )
+
+    return Response(status_code=204)
