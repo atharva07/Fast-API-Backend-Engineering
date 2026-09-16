@@ -2,10 +2,7 @@ from typing import Annotated
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.db.dependencies import (
-    DBSession, 
-    get_test_case_service,
-)
+from app.db.dependencies import (DBSession, get_test_case_service,)
 from app.db.models.test_case import TestCase
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
 from app.repositories.test_case import TestCaseRepository

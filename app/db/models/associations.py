@@ -6,7 +6,7 @@ project_users = Table(
     Base.metadata,
     Column(
         "project_id",
-        ForeignKey("projects.id"),
+        ForeignKey("projects.id", ondelete="CASCADE"),
         primary_key=True
     ),
     Column(

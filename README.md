@@ -81,3 +81,63 @@ Current Database looks like below conceptually
                         │ status       │
                         │ executed_at  │
                         └──────────────┘
+
+# QAForge API Collection Schema
+
+                QAForge API
+                │
+                ├── Health
+                │   └── GET    /health
+                │
+                ├── Auth
+                │   ├── POST   /api/auth/register
+                │   ├── POST   /api/auth/login
+                │   ├── POST   /api/auth/refresh
+                │   ├── POST   /api/auth/logout
+                │   └── GET    /api/auth/me
+                │
+                ├── Users
+                │   ├── POST   /api/users
+                │   ├── GET    /api/users
+                │   ├── GET    /api/users/{id}
+                │   ├── PATCH  /api/users/{id}
+                │   └── DELETE /api/users/{id}
+                │
+                ├── Projects
+                │   ├── POST   /api/projects
+                │   ├── GET    /api/projects
+                │   ├── GET    /api/projects/{id}
+                │   ├── PUT    /api/projects/{id}
+                │   ├── PATCH  /api/projects/{id}
+                │   └── DELETE /api/projects/{id}
+                │
+                ├── Project Members
+                │   ├── GET    /api/projects/{id}/members
+                │   ├── POST   /api/projects/{id}/members
+                │   ├── PATCH  /api/projects/{id}/members/{user_id}
+                │   └── DELETE /api/projects/{id}/members/{user_id}
+                │
+                ├── Test Suites
+                │   ├── POST   /api/projects/{id}/suites
+                │   ├── GET    /api/projects/{id}/suites
+                │   ├── GET    /api/suites/{id}
+                │   ├── PUT    /api/suites/{id}
+                │   ├── PATCH  /api/suites/{id}
+                │   └── DELETE /api/suites/{id}
+                │
+                ├── Test Cases
+                │   ├── POST   /api/projects/{id}/test-cases
+                │   ├── GET    /api/projects/{id}/test-cases
+                │   ├── GET    /api/test-cases/{id}
+                │   ├── PUT    /api/test-cases/{id}
+                │   ├── PATCH  /api/test-cases/{id}
+                │   ├── DELETE /api/test-cases/{id}
+                │   └── POST   /api/test-cases/{id}/execute
+                │
+                ├── Test Results
+                │   ├── GET    /api/test-cases/{id}/results
+                │   └── GET    /api/results/{id}
+                │
+                └── Audit Logs
+                    ├── GET    /api/projects/{id}/audit-logs
+                    └── GET    /api/test-cases/{id}/audit-logs

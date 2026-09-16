@@ -11,7 +11,10 @@ class Auditlog(Base):
     )
 
     test_case_id: Mapped[int] = mapped_column(
-        ForeignKey("test_case.id"),
+        ForeignKey(
+            "test_case.id",
+            ondelete="CASCADE",
+        ),
         nullable=False
     )
 

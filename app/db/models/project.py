@@ -26,7 +26,8 @@ class Project(Base):
     )
 
     test_case: Mapped[list["TestCase"]] = relationship(
-        back_populates="project"
+        back_populates="project",
+        cascade="all, delete-orphan",
     )
 
     users: Mapped[list["User"]] = relationship(

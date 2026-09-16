@@ -37,8 +37,11 @@ class TestCase(Base):
 
     # This is database level relationship
     project_id: Mapped[int | None] = mapped_column(
-        ForeignKey("projects.id"),
-        nullable=True
+        ForeignKey(
+            "projects.id",
+            ondelete="CASCADE",
+        ),
+        nullable=True,
     )
 
     # This is ORM level relationship
