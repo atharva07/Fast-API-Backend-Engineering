@@ -5,6 +5,7 @@ from app.exceptions.test_case import (
     TestCaseNotExecutableError
 )
 from app.exceptions.project import ProjectAlreadyExistsError
+from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyExistsError
 
 # Generic Exception handler
 async def generic_exception_handler(
@@ -78,4 +79,35 @@ async def project_not_found_handler(request, exc):
                 "message": str(exc)
             }
         },
+    )
+
+"""
+Exceptions related to Test Suite
+"""
+async def test_suite_already_exists_handler(
+        request: Request,
+        exc: TestSuiteAlreadyExistsError
+):
+    return JSONResponse(
+        status_code=409,
+        content = {
+            "error": {
+                "code": "TEST_SUITE_ALREADY_EXISTS",
+                "message": str(exc)
+            }
+        }
+    )
+
+async def test_suite_not_found_handler(
+        request: Request,
+        exc: TestSuiteNotFoundError
+):
+    return JSONResponse(
+        status_code=404,
+        content = {
+            "error": {
+                "code": "TEST_SUITE_NOT_FOUND",
+                "message": str(exc)
+            }
+        }
     )

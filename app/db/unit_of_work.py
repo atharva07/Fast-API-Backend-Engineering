@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.repositories.audit_log import AuditLogRepository
 from app.repositories.test_case import TestCaseRepository
 from app.repositories.project import ProjectRepository
+from app.repositories.test_suite import TestSuiteRepository
 
 class UnitOfWork:
     def __init__(self, db: Session):
@@ -9,6 +10,7 @@ class UnitOfWork:
         self.test_cases = TestCaseRepository(db)
         self.audit_logs = AuditLogRepository(db)
         self.projects = ProjectRepository(db)
+        self.test_suites = TestSuiteRepository(db)
 
     def __enter__(self):
         return self

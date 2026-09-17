@@ -6,6 +6,7 @@ from app.db.models.associations import project_users
 
 if TYPE_CHECKING:
     from app.db.models.test_case import TestCase
+    from app.db.models.test_suite import TestSuite
     from app.db.models.user import User
 
 class Project(Base):
@@ -39,4 +40,9 @@ class Project(Base):
     execution_timeout: Mapped[int] = mapped_column(
         nullable=False,
         default=3000,
+    )
+
+    test_suites: Mapped[list["TestSuite"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
     )

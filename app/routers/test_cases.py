@@ -12,6 +12,11 @@ from app.services.test_case import TestCaseService
 router = APIRouter()
 # DBSession = Annotated[Session, Depends(get_db)]
 
+router = APIRouter(
+    prefix="/api",
+    tags=["Test Cases"],
+)
+
 # Get Test Cases - GET
 @router.get(
     "/",

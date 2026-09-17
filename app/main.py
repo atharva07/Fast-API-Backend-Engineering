@@ -5,13 +5,21 @@ from app.exceptions.handlers import (
     test_case_not_found_handler,
     test_case_not_executable_handler,
     project_already_exists_handler,
-    project_not_found_handler
+    project_not_found_handler,
+    test_suite_not_found_handler,
+    test_suite_already_exists_handler
 )
 from app.exceptions.project import ProjectAlreadyExistsError, ProjectNotFoundError
 from app.exceptions.test_case import (
     TestCaseNotExecutableError, TestCaseNotFoundError
 )
+from app.exceptions.test_suite import ( 
+    TestSuiteNotFoundError, 
+    TestSuiteAlreadyExistsError 
+)
+from app.routers.test_cases import router as test_case_router
 from app.routers.projects import router as project_router
+from app.routers.test_suites import router as test_suite_router
 
 app = FastAPI()
 
@@ -49,16 +57,31 @@ app.add_exception_handler(
     project_not_found_handler,
 )
 
+"""
+Exceptions related to Test Suite
+"""
+app.add_exception_handler(
+    TestSuiteNotFoundError,
+    test_suite_not_found_handler,
+)
+
+app.add_exception_handler(
+    TestSuiteAlreadyExistsError,
+    test_suite_already_exists_handler
+)
+
 @app.get("/")
 def root():
     return {"message": "QAForge Backend is Running"}
 
 app.include_router(
-    test_cases.router,
-    prefix="/api",
-    tags=["Test Cases"],
+    test_case_router
 )
 
 app.include_router(
     project_router
+)
+
+app.include_router(
+    test_suite_router
 )
