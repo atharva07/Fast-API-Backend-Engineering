@@ -104,6 +104,6 @@ class ProjectService:
             if project is None:
                 raise ProjectNotFoundError("Project Not Found")
 
-            self.uow.projects.delete(project_id)
+            self.uow.projects.delete(project)
 
             self.uow.commit()

@@ -17,7 +17,8 @@ class Project(Base):
 
     name: Mapped[str] = mapped_column(
         String(255),
-        nullable=False
+        nullable=False,
+        unique=True
     )
 
     description: Mapped[str | None] = mapped_column(
