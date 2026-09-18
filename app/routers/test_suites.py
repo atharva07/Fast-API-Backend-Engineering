@@ -51,6 +51,19 @@ def get_suite(
 
     return service.get_suite(suite_id)
 
+@router.put(
+    "suites/{suite_id}",
+    response_model=TestSuiteResponse,
+)
+def replace_suite(suite_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = TestSuiteService(uow)
+
+    return service.replace_suite(
+        suite_id=suite_id,
+        name=suite.name,
+        description=suite.description
+    )
+
 @router.patch(
     "/suites/{suite_id}",
     response_model=TestSuiteResponse,

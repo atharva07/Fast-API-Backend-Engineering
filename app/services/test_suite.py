@@ -85,6 +85,30 @@ class TestSuiteService:
             return suite
 
     """
+        This is a PATCH Request
+    """
+    def replace_suite(self, suite_id: int, name: str | None, description: str | None) -> TestSuite:
+        with self.uow:
+            suite = self.uow.test_suites.get_by_id(suite_id)
+
+            if suite is None:
+                raise TestSuiteNotFoundError("Test Suite Not Found")
+
+            suite.name = name
+            suite.description = description
+
+            try:
+                self.uow.commit()
+            except IntegrityError as exc:
+                self.uow.rollback()
+
+                if exc.orig.sqlstate == "23505":
+                    raise TestSuiteAlreadyExistsError("A Test Suite with this name already Exists")
+                raise
+
+            return suite
+
+    """
         This is a DELETE Request
     """
     def delete_suite(self, suite_id: int) -> None:
