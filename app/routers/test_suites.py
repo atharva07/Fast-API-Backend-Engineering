@@ -32,7 +32,7 @@ def get_suite(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
 
     return service.get_suite(suite_id)
 
-@router.put("suites/{suite_id}", response_model=TestSuiteResponse)
+@router.put("/suites/{suite_id}", response_model=TestSuiteResponse)
 def replace_suite(suite_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 

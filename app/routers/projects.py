@@ -1,11 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
-from app.models.project import (
-    ProjectCreate,
-    ProjectResponse,
-    ProjectUpdate
-)
+from app.models.project import (ProjectCreate, ProjectResponse, ProjectUpdate)
 from app.services.project import ProjectService
 
 router = APIRouter(
@@ -76,8 +72,6 @@ DELETE
 def delete_project(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = ProjectService(uow)
 
-    service.delete_project(
-        project_id=project_id,  
-    )
+    service.delete_project(project_id=project_id)
 
     return Response(status_code=204)

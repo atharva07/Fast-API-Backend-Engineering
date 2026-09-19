@@ -21,24 +21,16 @@ def get_db() -> Generator:
 
 DBSession = Annotated[Session, Depends(get_db)]
 
-def get_test_case_repository(
-    db: DBSession
-) -> TestCaseRepository:
+def get_test_case_repository(db: DBSession) -> TestCaseRepository:
     return TestCaseRepository(db)
 
-def get_audit_log_repository(
-    db: DBSession
-) -> AuditLogRepository:
+def get_audit_log_repository(db: DBSession) -> AuditLogRepository:
     return AuditLogRepository(db)
 
-def get_unit_of_work(
-    db: DBSession,
-) -> UnitOfWork:
+def get_unit_of_work(db: DBSession) -> UnitOfWork:
     return UnitOfWork(db)
 
-def get_test_case_service(
-    uow: UnitOfWork = Depends(get_unit_of_work),
-) -> TestCaseService:
+def get_test_case_service(uow: UnitOfWork = Depends(get_unit_of_work)) -> TestCaseService:
     return TestCaseService (
         uow = uow
     )

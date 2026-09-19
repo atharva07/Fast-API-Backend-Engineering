@@ -5,11 +5,7 @@ class AuditLogRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def add(
-        self,
-        audit_log: Auditlog,
-    ) -> Auditlog:
-        
+    def add(self, audit_log: Auditlog) -> Auditlog:
         self.db.add(audit_log)
 
         return audit_log

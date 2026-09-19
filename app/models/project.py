@@ -5,10 +5,7 @@ class ProjectCreate(BaseModel):
     description: str | None = None
 
 class ProjectUpdate(BaseModel):
-    name: str | None = Field(
-        default=None,
-        min_length=3,
-    )
+    name: str | None = Field(default=None, min_length=3)
     description: str | None = None
 
 class ProjectResponse(BaseModel):

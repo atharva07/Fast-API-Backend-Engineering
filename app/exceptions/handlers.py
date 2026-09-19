@@ -15,7 +15,7 @@ async def generic_exception_handler(
         content={
             "error": {
                 "code": "INTERNAL_SERVER_ERROR",
-                "message": "An unexpected error occured"
+                "message": f"An unexpected error occured: {str(exc)}"
             }
         }
     )
