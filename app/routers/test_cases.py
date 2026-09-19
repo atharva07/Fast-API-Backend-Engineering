@@ -61,6 +61,20 @@ def replace_test_case(test_case_id: int, test_case: TestCaseCreate, uow: UnitOfW
     )
 
 """
+    PATCH Request
+"""
+@router.patch("/test_cases/{test_case_id}", response_model=TestCaseResponse)
+def update_test_case(test_case_id: int, test_case: TestCaseUpdate, uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = TestCaseService(uow)
+
+    return service.update_test_case(
+        test_case_id=test_case_id,
+        name=test_case.name,
+        description=test_case.description,
+        priority=test_case.priority
+    )
+
+"""
     DELETE Request
 """
 @router.delete("/test_cases/{test_case_id}", status_code=status.HTTP_204_NO_CONTENT)

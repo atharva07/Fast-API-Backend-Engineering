@@ -121,6 +121,36 @@ class TestCaseService:
             return test_case
 
     """
+        This is a PATCH Request
+    """
+    def update_test_case(self, test_case_id: int, name: str | None, description: str | None, priority: str) -> TestCase:
+        with self.uow:
+            test_case = self.uow.test_cases.get_by_id(test_case_id)
+
+            if test_case is None:
+                raise TestCaseNotFoundError("Test Case Not Found")
+
+            if name is not None:
+                test_case.name = name
+
+            if description is not None:
+                test_case.description = description
+
+            if priority is not None:
+                test_case.priority = priority
+
+            try:
+                self.uow.commit()
+            except IntegrityError as exc:
+                self.uow.commit()
+
+                if exc.orig.sqlstate == "23505":
+                    raise TestCaseAlreadyExistsError("A Test case with this name already exists")
+                raise
+
+            return test_case
+
+    """
         This is DELETE Request
     """
     def delete_test_case(self, test_case_id: int) -> None:
