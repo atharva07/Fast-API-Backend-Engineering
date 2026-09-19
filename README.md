@@ -106,10 +106,10 @@ Current Database looks like below conceptually
                 ├── Projects
                 │   ├── POST   /api/projects
                 │   ├── GET    /api/projects
-                │   ├── GET    /api/projects/{id}
-                │   ├── PUT    /api/projects/{id}
-                │   ├── PATCH  /api/projects/{id}
-                │   └── DELETE /api/projects/{id}
+                │   ├── GET    /api/projects/{project_id}
+                │   ├── PUT    /api/projects/{project_id}
+                │   ├── PATCH  /api/projects/{project_id}
+                │   └── DELETE /api/projects/{project_id}
                 │
                 ├── Project Members
                 │   ├── GET    /api/projects/{id}/members
@@ -118,21 +118,21 @@ Current Database looks like below conceptually
                 │   └── DELETE /api/projects/{id}/members/{user_id}
                 │
                 ├── Test Suites
-                │   ├── POST   /api/projects/{id}/suites
-                │   ├── GET    /api/projects/{id}/suites
-                │   ├── GET    /api/suites/{id}
-                │   ├── PUT    /api/suites/{id}
-                │   ├── PATCH  /api/suites/{id}
-                │   └── DELETE /api/suites/{id}
+                │   ├── POST   /api/projects/{project_id}/suites
+                │   ├── GET    /api/projects/{project_id}/suites
+                │   ├── GET    /api/suites/{suite_id}
+                │   ├── PUT    /api/suites/{suite_id}
+                │   ├── PATCH  /api/suites/{suite_id}
+                │   └── DELETE /api/suites/{suite_id}
                 │
                 ├── Test Cases
-                │   ├── POST   /api/projects/{id}/test-cases
-                │   ├── GET    /api/projects/{id}/test-cases
-                │   ├── GET    /api/test-cases/{id}
+                │   ├── POST   /api/suites/{suite_id}/test_cases
+                │   ├── GET    /api/suites/{suite_id}/test_cases
+                │   ├── GET    /api/test_cases/{id}
                 │   ├── PUT    /api/test-cases/{id}
                 │   ├── PATCH  /api/test-cases/{id}
                 │   ├── DELETE /api/test-cases/{id}
-                │   └── POST   /api/test-cases/{id}/execute
+                │   └── POST   /api/test-cases/{test_case_id}/execute
                 │
                 ├── Test Results
                 │   ├── GET    /api/test-cases/{id}/results

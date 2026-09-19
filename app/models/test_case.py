@@ -25,6 +25,7 @@ class TestCaseResponse(BaseModel):
     description: str | None
     priority: Priority
     status: TestCaseStatus
+    suite_id: int
 
 class TestCaseUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=3)

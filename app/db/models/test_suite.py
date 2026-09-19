@@ -5,6 +5,7 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.db.models.project import Project
+    from app.db.models.test_case import TestCase
 
 class TestSuite(Base):
     __tablename__ = "test_suites"
@@ -39,4 +40,9 @@ class TestSuite(Base):
 
     project: Mapped["Project"] = relationship(
         back_populates="test_suites"
+    )
+
+    test_cases: Mapped[list["TestCase"]] = relationship(
+        back_populates="suite",
+        cascade="all, delete-orphan"
     )

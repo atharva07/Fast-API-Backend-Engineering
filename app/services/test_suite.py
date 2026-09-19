@@ -85,7 +85,7 @@ class TestSuiteService:
             return suite
 
     """
-        This is a PATCH Request
+        This is a PUT Request
     """
     def replace_suite(self, suite_id: int, name: str | None, description: str | None) -> TestSuite:
         with self.uow:

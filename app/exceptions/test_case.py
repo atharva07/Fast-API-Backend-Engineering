@@ -3,3 +3,6 @@ class TestCaseNotFoundError(Exception):
 
 class TestCaseNotExecutableError(Exception):
     pass
+
+class TestCaseAlreadyExistsError(Exception):
+    pass

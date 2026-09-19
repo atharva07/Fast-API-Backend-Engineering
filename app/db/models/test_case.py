@@ -4,8 +4,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 
 if TYPE_CHECKING:
-    from app.db.models.project import Project
     from app.db.models.test_result import TestResult
+    from app.db.models.test_suite import TestSuite
 
 class TestCase(Base):
     __tablename__ = "test_case"
@@ -32,23 +32,24 @@ class TestCase(Base):
 
     status: Mapped[str] = mapped_column(
         String(20),
-        nullable=False
+        nullable=False,
+        default="DRAFT" 
     )
 
     # This is database level relationship
-    project_id: Mapped[int | None] = mapped_column(
+    suite_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "projects.id",
-            ondelete="CASCADE",
+            "test_suites.id",
+            ondelete="CASCADE"
         ),
-        nullable=True,
+        nullable=False,
     )
 
     # This is ORM level relationship
-    project: Mapped["Project | None"] = relationship(
+    results: Mapped[list["TestResult"]] = relationship(
         back_populates="test_case"
     )
 
-    results: Mapped[list["TestResult"]] = relationship(
-        back_populates="test_case"
+    suite: Mapped["TestSuite"] = relationship(
+        back_populates="test_cases"
     )

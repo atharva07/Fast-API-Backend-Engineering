@@ -20,6 +20,12 @@ class TestCaseRepository:
             select(TestCase)
         ).scalars().all()
 
+    def get_by_suite(self, suite_id: int) -> list[TestCase]:
+        return self.db.execute(
+            select(TestCase)
+            .where(TestCase.suite_id == suite_id)
+        ).scalars().all()
+
     def add(
         self,
         test_case: TestCase,

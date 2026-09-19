@@ -2,7 +2,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from app.exceptions.test_case import (
     TestCaseNotFoundError,
-    TestCaseNotExecutableError
+    TestCaseNotExecutableError,
+    TestCaseAlreadyExistsError
 )
 from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyExistsError
@@ -48,6 +49,20 @@ async def test_case_not_executable_handler(
         content={
             "error": {
                 "code": "TEST_CASE_NOT_EXECUTABLE",
+                "message": str(exc),
+            }
+        },
+    )
+
+async def test_case_already_exists_handler(
+        request: Request,
+        exc: TestCaseAlreadyExistsError
+): 
+    return JSONResponse(
+        status_code=409,
+        content={
+            "error": {
+                "code": "TEST_CASE_ALREADY_EXISTS",
                 "message": str(exc),
             }
         },
