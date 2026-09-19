@@ -10,8 +10,6 @@ from app.repositories.test_case import TestCaseRepository
 from app.models.test_result import TestResultResponse
 from app.services.test_case import TestCaseService
 
-router = APIRouter()
-
 router = APIRouter(prefix="/api", tags=["Test Cases"])
 
 """

@@ -1,12 +1,9 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
-from app.exceptions.test_case import (
-    TestCaseNotFoundError,
-    TestCaseNotExecutableError,
-    TestCaseAlreadyExistsError
-)
+from app.exceptions.test_case import (TestCaseNotFoundError, TestCaseNotExecutableError, TestCaseAlreadyExistsError)
 from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyExistsError
+from app.exceptions.test_result import TestResultNotFoundError
 
 # Generic Exception handler
 async def generic_exception_handler(
@@ -122,6 +119,23 @@ async def test_suite_not_found_handler(
         content = {
             "error": {
                 "code": "TEST_SUITE_NOT_FOUND",
+                "message": str(exc)
+            }
+        }
+    )
+
+"""
+Exceptions related to Test Results
+"""
+async def test_result_not_found_handler(
+        request: Request,
+        exc: TestResultNotFoundError
+):
+    return JSONResponse(
+        status_code=409,
+        content= {
+            "error": {
+                "code": "TEST_RESULT_NOT_FOUND",
                 "message": str(exc)
             }
         }

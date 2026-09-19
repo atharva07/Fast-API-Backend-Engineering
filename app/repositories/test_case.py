@@ -6,10 +6,7 @@ class TestCaseRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_by_id(
-        self,
-        test_case_id: int,
-    ) -> TestCase | None:
+    def get_by_id(self, test_case_id: int) -> TestCase | None:
         return self.db.execute(
             select(TestCase)
             .where(TestCase.id == test_case_id)
@@ -26,16 +23,10 @@ class TestCaseRepository:
             .where(TestCase.suite_id == suite_id)
         ).scalars().all()
 
-    def add(
-        self,
-        test_case: TestCase,
-    ) -> TestCase:
+    def add(self, test_case: TestCase) -> TestCase:
         self.db.add(test_case)
 
         return test_case
 
-    def delete(
-        self,
-        test_case: TestCase,
-    ) -> None:
+    def delete(self, test_case: TestCase) -> None:
         self.db.delete(test_case)

@@ -1,0 +1,2 @@
+class TestResultNotFoundError(Exception):
+    pass

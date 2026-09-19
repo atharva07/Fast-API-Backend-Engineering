@@ -47,7 +47,8 @@ class TestCase(Base):
 
     # This is ORM level relationship
     results: Mapped[list["TestResult"]] = relationship(
-        back_populates="test_case"
+        back_populates="test_case",
+        cascade="all, delete-orphan"
     )
 
     suite: Mapped["TestSuite"] = relationship(

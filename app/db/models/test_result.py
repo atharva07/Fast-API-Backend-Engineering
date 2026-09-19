@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 
@@ -10,6 +10,7 @@ class TestResult(Base):
     __tablename__ = "test_results"
 
     id: Mapped[int] = mapped_column(
+        Integer,
         primary_key=True
     )
 
