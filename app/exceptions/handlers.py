@@ -1,10 +1,11 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
-from app.exceptions.test_case import (TestCaseNotFoundError, TestCaseNotExecutableError, TestCaseAlreadyExistsError)
+from app.exceptions.test_case import TestCaseNotFoundError, TestCaseNotExecutableError, TestCaseAlreadyExistsError
 from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyExistsError
 from app.exceptions.test_result import TestResultNotFoundError
 from app.exceptions.user import UserNotFoundError, UserAlreadyExistsExceptions
+from app.exceptions.auth import InvalidCredentialsError
 
 # Generic Exception handler
 async def generic_exception_handler(
@@ -143,7 +144,7 @@ async def test_result_not_found_handler(
     )
 
 """
-Exceptions realted to User
+Exceptions related to User
 """
 async def user_not_found_handler(
         request: Request,
@@ -169,6 +170,23 @@ async def user_already_exists_handler(
             "error": {
                 "code": "USER_ALREADY_EXISTS",
                 "message": str(exc)
+            }
+        },
+    )
+
+"""
+Exceptions related to Auth
+"""
+async def invalid_credentials_handler(
+        request: Request,
+        exc: InvalidCredentialsError
+):
+    return JSONResponse(
+        status_code=409,
+        content= {
+            "error": {
+                "code": "INVALID_CREDENTIALS",
+                "message": "Invalid email or password"
             }
         },
     )
