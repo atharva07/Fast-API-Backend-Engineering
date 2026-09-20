@@ -5,7 +5,7 @@ from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyExistsError
 from app.exceptions.test_result import TestResultNotFoundError
 from app.exceptions.user import UserNotFoundError, UserAlreadyExistsExceptions
-from app.exceptions.auth import InvalidCredentialsError
+from app.exceptions.auth import InvalidCredentialsError, InvalidTokenError
 
 # Generic Exception handler
 async def generic_exception_handler(
@@ -190,3 +190,18 @@ async def invalid_credentials_handler(
             }
         },
     )
+
+async def invalid_token_handler(
+        request: Request,
+        exc: InvalidTokenError
+):
+    return JSONResponse(
+        status_code=401,
+        content= {
+            "error": {
+                "code": "INVALID_TOKEN",
+                "message": str(exc)
+            }
+        },
+    )
+

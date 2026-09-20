@@ -5,5 +5,5 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=3)
 
 class LoginResponse(BaseModel):
-    user_id: int
-    message: str
+    access_token: str
+    token_type: str 

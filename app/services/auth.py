@@ -1,6 +1,7 @@
 from app.db.unit_of_work import UnitOfWork
 from app.exceptions.auth import InvalidCredentialsError
 from app.security.password import verify_password
+from app.security.jwt import create_access_token
 
 class AuthService:
     def __init__(self, uow: UnitOfWork):
@@ -16,4 +17,4 @@ class AuthService:
             if not verify_password(password, user.password_hash):
                 raise InvalidCredentialsError("Invalid Email or Password")
 
-            return user
+            return create_access_token(user.id)

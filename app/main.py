@@ -10,14 +10,15 @@ from app.exceptions.handlers import (
     test_result_not_found_handler,
     user_already_exists_handler,
     user_not_found_handler,
-    invalid_credentials_handler
+    invalid_credentials_handler,
+    invalid_token_handler
 )
 from app.exceptions.project import ProjectAlreadyExistsError, ProjectNotFoundError
 from app.exceptions.test_case import (TestCaseNotExecutableError, TestCaseNotFoundError)
 from app.exceptions.test_suite import (TestSuiteNotFoundError, TestSuiteAlreadyExistsError)
 from app.exceptions.test_result import TestResultNotFoundError
 from app.exceptions.user import UserAlreadyExistsExceptions, UserNotFoundError
-from app.exceptions.auth import InvalidCredentialsError
+from app.exceptions.auth import InvalidCredentialsError, InvalidTokenError
 
 from app.routers.test_cases import router as test_case_router
 from app.routers.projects import router as project_router
@@ -102,6 +103,11 @@ Exceptions related to Auth
 app.add_exception_handler(
     InvalidCredentialsError,
     invalid_credentials_handler
+)
+
+app.add_exception_handler(
+    InvalidTokenError,
+    invalid_token_handler
 )
 
 @app.get("/")

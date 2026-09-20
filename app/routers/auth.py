@@ -13,6 +13,6 @@ router = APIRouter(
 def login(requests: LoginRequest, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = AuthService(uow)
 
-    user = service.authenticate(email=requests.email, password=requests.password)
+    access_token = service.authenticate(email=requests.email, password=requests.password)
 
-    return LoginResponse(user_id=user.id, message="Authentication successfull")
+    return LoginResponse(access_token=access_token, token_type="bearer")
