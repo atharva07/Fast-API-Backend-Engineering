@@ -4,6 +4,8 @@ from app.db.unit_of_work import UnitOfWork
 from app.models.project import (ProjectCreate, ProjectResponse, ProjectUpdate)
 from app.services.project import ProjectService
 from app.security.dependencies import get_current_user_id
+from app.db.models.user import User
+from app.security.dependencies import get_current_user
 
 router = APIRouter(
     prefix="/api/projects",
@@ -26,8 +28,11 @@ def create_project(project: ProjectCreate, uow: UnitOfWork = Depends(get_unit_of
 GET Request
 """
 @router.get("/", response_model=list[ProjectResponse])
-def get_projects(current_user_id: int = Depends(get_current_user_id), uow: UnitOfWork = Depends(get_unit_of_work)):
+def get_projects(current_user: User = Depends(get_current_user), uow: UnitOfWork = Depends(get_unit_of_work)):
     service = ProjectService(uow)
+
+    print("User ID : ", current_user.id)
+    print("User Name : ", current_user.email)
     
     return service.get_projects()
 
