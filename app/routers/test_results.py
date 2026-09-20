@@ -15,6 +15,9 @@ def get_results(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
 
     return service.get_results_by_test_case(test_case_id)
 
+"""
+    GET Request
+"""
 @router.get("/results/{result_id}")
 def get_result(result_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestResultService(uow)

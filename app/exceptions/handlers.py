@@ -4,6 +4,7 @@ from app.exceptions.test_case import (TestCaseNotFoundError, TestCaseNotExecutab
 from app.exceptions.project import ProjectAlreadyExistsError
 from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyExistsError
 from app.exceptions.test_result import TestResultNotFoundError
+from app.exceptions.user import UserNotFoundError, UserAlreadyExistsExceptions
 
 # Generic Exception handler
 async def generic_exception_handler(
@@ -17,7 +18,7 @@ async def generic_exception_handler(
                 "code": "INTERNAL_SERVER_ERROR",
                 "message": f"An unexpected error occured: {str(exc)}"
             }
-        }
+        },
     )
 
 """
@@ -107,7 +108,7 @@ async def test_suite_already_exists_handler(
                 "code": "TEST_SUITE_ALREADY_EXISTS",
                 "message": str(exc)
             }
-        }
+        },
     )
 
 async def test_suite_not_found_handler(
@@ -121,7 +122,7 @@ async def test_suite_not_found_handler(
                 "code": "TEST_SUITE_NOT_FOUND",
                 "message": str(exc)
             }
-        }
+        },
     )
 
 """
@@ -132,11 +133,42 @@ async def test_result_not_found_handler(
         exc: TestResultNotFoundError
 ):
     return JSONResponse(
-        status_code=409,
+        status_code=404,
         content= {
             "error": {
                 "code": "TEST_RESULT_NOT_FOUND",
                 "message": str(exc)
             }
-        }
+        },
+    )
+
+"""
+Exceptions realted to User
+"""
+async def user_not_found_handler(
+        request: Request,
+        exc: UserNotFoundError
+):
+    return JSONResponse(
+        status_code=404,
+        content= {
+            "error": {
+                "code": "USER_NOT_FOUND",
+                "message": str(exc)
+            }
+        },
+    )
+
+async def user_already_exists_handler(
+        request: Request,
+        exc: UserAlreadyExistsExceptions
+):
+    return JSONResponse(
+        status_code=409,
+        content= {
+            "error": {
+                "code": "USER_ALREADY_EXISTS",
+                "message": str(exc)
+            }
+        },
     )

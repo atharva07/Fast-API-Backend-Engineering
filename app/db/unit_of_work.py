@@ -4,6 +4,7 @@ from app.repositories.test_case import TestCaseRepository
 from app.repositories.project import ProjectRepository
 from app.repositories.test_suite import TestSuiteRepository
 from app.repositories.test_result import TestResultRepository
+from app.repositories.user import UserRepository
 
 class UnitOfWork:
     def __init__(self, db: Session):
@@ -13,6 +14,7 @@ class UnitOfWork:
         self.projects = ProjectRepository(db)
         self.test_suites = TestSuiteRepository(db)
         self.test_results = TestResultRepository(db)
+        self.users = UserRepository(db)
 
     def __enter__(self):
         return self

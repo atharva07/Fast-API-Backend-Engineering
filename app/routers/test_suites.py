@@ -10,6 +10,9 @@ from app.services.test_suite import TestSuiteService
 
 router = APIRouter(prefix="/api", tags=["Test Suites"])
 
+"""
+    POST Request
+"""
 @router.post("/projects/{project_id}/suites", response_model=TestSuiteResponse, status_code=status.HTTP_201_CREATED)
 def create_suite(project_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
@@ -20,18 +23,27 @@ def create_suite(project_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depe
         description=suite.description
     )
 
+"""
+    GET Request
+"""
 @router.get("/projects/{project_id}/suites", response_model=list[TestSuiteResponse])
 def get_suites(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.get_suites(project_id)
 
+"""
+    GET Request
+"""
 @router.get("/suites/{suite_id}", response_model=TestSuiteResponse)
 def get_suite(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.get_suite(suite_id)
 
+"""
+    PUT Request
+"""
 @router.put("/suites/{suite_id}", response_model=TestSuiteResponse)
 def replace_suite(suite_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
@@ -42,6 +54,9 @@ def replace_suite(suite_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depen
         description=suite.description
     )
 
+"""
+    PATCH Request
+"""
 @router.patch("/suites/{suite_id}", response_model=TestSuiteResponse)
 def update_suite(suite_id: int, suite: TestSuiteUpdate, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
@@ -52,6 +67,9 @@ def update_suite(suite_id: int, suite: TestSuiteUpdate, uow: UnitOfWork = Depend
         description=suite.description
     )
 
+"""
+    DELETE Request
+"""
 @router.delete("/suites/{suite_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_suite(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
