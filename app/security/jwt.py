@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import jwt
 from app.exceptions.auth import InvalidTokenError
-from app.core.config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES, JWT_ALGORITHM, JwT_SECRET_KEY
+from app.core.config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES, JWT_ALGORITHM, JWT_SECRET_KEY
 
 def create_access_token(user_id: int) -> str:
     expires_at = datetime.now(timezone.utc) + timedelta(
@@ -15,7 +15,7 @@ def create_access_token(user_id: int) -> str:
 
     return jwt.encode(
         payload,
-        JwT_SECRET_KEY,
+        JWT_SECRET_KEY,
         algorithm=JWT_ALGORITHM,
     )
 
@@ -23,7 +23,7 @@ def decode_access_token(token: str) -> int:
     try:
         payload = jwt.decode(
             token,
-            JwT_SECRET_KEY,
+            JWT_SECRET_KEY,
             algorithms=[JWT_ALGORITHM]
         )
 

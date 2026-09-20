@@ -1,6 +1,6 @@
 import os
 
-JwT_SECRET_KEY = os.getenv(
+JWT_SECRET_KEY = os.getenv(
     "JWT_SECRET_KEY",
     "development-secret-change-me"
 )

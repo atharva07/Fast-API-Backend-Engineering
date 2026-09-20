@@ -3,7 +3,6 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.security.jwt import decode_access_token
 from app.db.models.user import User
 from app.db.dependencies import get_unit_of_work
-from app.repositories.user import UserRepository
 from app.exceptions.auth import InvalidTokenError
 from app.db.unit_of_work import UnitOfWork
 
