@@ -24,4 +24,3 @@ class ProjectMembeshipRepository:
     def add(self, membership: ProjectUser) -> ProjectUser:
         self.db.add(membership)
         return membership
-    

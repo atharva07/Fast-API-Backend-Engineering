@@ -3,3 +3,6 @@ class ProjectMembershipNotFoundError(Exception):
 
 class ProjectMembershipAlreadyExistsError(Exception):
     pass
+
+class ProjectAccessDeniedError(Exception):
+    pass

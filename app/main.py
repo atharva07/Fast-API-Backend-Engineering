@@ -13,7 +13,8 @@ from app.exceptions.handlers import (
     invalid_credentials_handler,
     invalid_token_handler,
     project_membership_not_found_handler,
-    project_membership_already_exists_handler
+    project_membership_already_exists_handler,
+    project_access_denied_handler
 )
 
 from app.exceptions.project import ProjectAlreadyExistsError, ProjectNotFoundError
@@ -22,7 +23,7 @@ from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyEx
 from app.exceptions.test_result import TestResultNotFoundError
 from app.exceptions.user import UserAlreadyExistsExceptions, UserNotFoundError
 from app.exceptions.auth import InvalidCredentialsError, InvalidTokenError
-from app.exceptions.project_membership import ProjectMembershipNotFoundError, ProjectMembershipAlreadyExistsError
+from app.exceptions.project_membership import ProjectMembershipNotFoundError, ProjectMembershipAlreadyExistsError, ProjectAccessDeniedError
 
 from app.routers.test_cases import router as test_case_router
 from app.routers.projects import router as project_router
@@ -126,6 +127,11 @@ app.add_exception_handler(
 app.add_exception_handler(
     ProjectMembershipAlreadyExistsError,
     project_membership_already_exists_handler
+)
+
+app.add_exception_handler(
+    ProjectAccessDeniedError,
+    project_access_denied_handler
 )
 
 @app.get("/")
