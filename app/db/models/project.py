@@ -2,12 +2,10 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.db.models.associations import project_users
 
 if TYPE_CHECKING:
-    from app.db.models.test_case import TestCase
+    from app.db.models.associations import ProjectUser
     from app.db.models.test_suite import TestSuite
-    from app.db.models.user import User
 
 class Project(Base):
     __tablename__ = "projects"
@@ -27,11 +25,6 @@ class Project(Base):
         nullable=True
     )
 
-    users: Mapped[list["User"]] = relationship(
-        secondary=project_users,
-        back_populates="projects"
-    )
-
     execution_timeout: Mapped[int] = mapped_column(
         nullable=False,
         default=3000,
@@ -40,4 +33,10 @@ class Project(Base):
     test_suites: Mapped[list["TestSuite"]] = relationship(
         back_populates="project",
         cascade="all, delete-orphan",
+    )
+
+    # A Project can have multiple project users as an object
+    project_users: Mapped[list["ProjectUser"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan"
     )

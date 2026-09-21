@@ -6,6 +6,7 @@ from app.exceptions.test_suite import TestSuiteNotFoundError, TestSuiteAlreadyEx
 from app.exceptions.test_result import TestResultNotFoundError
 from app.exceptions.user import UserNotFoundError, UserAlreadyExistsExceptions
 from app.exceptions.auth import InvalidCredentialsError, InvalidTokenError
+from app.exceptions.project_membership import ProjectMembershipAlreadyExistsError, ProjectMembershipNotFoundError
 
 # Generic Exception handler
 async def generic_exception_handler(
@@ -205,3 +206,33 @@ async def invalid_token_handler(
         },
     )
 
+"""
+Exceptions related to Project Membership
+"""
+async def project_membership_not_found_handler(
+        request: Request,
+        exc: ProjectMembershipNotFoundError
+):
+    return JSONResponse(
+        status_code=404,
+        content= {
+            "error": {
+                "code": "PROJECT_MEMBERSHIP_NOT_FOUND",
+                "message": str(exc)
+            }
+        },
+    )
+
+async def project_membership_already_exists_handler(
+        request: Request,
+        exc: ProjectMembershipAlreadyExistsError
+):
+    return JSONResponse(
+        status_code=409,
+        content= {
+            "error": {
+                "code": "PROJECT_MEMBERSHIP_ALREADY_EXISTS",
+                "message": str(exc)
+            }
+        }
+    )
