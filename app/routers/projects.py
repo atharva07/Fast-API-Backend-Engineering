@@ -6,6 +6,8 @@ from app.services.project import ProjectService
 from app.db.models.user import User
 from app.security.dependencies import get_current_user
 from app.security.authorization import get_project_membership
+from app.security.authorization import require_role
+from app.models.role import ProjectRole
 
 router = APIRouter(
     prefix="/api/projects",
@@ -72,9 +74,13 @@ def update_project(project_id: int, project: ProjectUpdate, uow: UnitOfWork = De
 DELETE
 """
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_project(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def delete_project(project_id: int, membership = Depends(require_role(ProjectRole.ADMIN)), uow: UnitOfWork = Depends(get_unit_of_work)):
+    print("AUTHORIZED MEMBERSHIP: ", membership.role)
+
     service = ProjectService(uow)
 
     service.delete_project(project_id=project_id)
+
+    print("PROJECT DELETE SUCCESSFULL")
 
     return Response(status_code=204)

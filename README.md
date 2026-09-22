@@ -141,3 +141,12 @@ Current Database looks like below conceptually
                 └── Audit Logs
                     ├── GET    /api/projects/{id}/audit-logs
                     └── GET    /api/test-cases/{id}/audit-logs
+
+
+Passwords for Testing
+
+Atharva     atharva123
+Rahul       rahul123
+Priya       priya123
+Tony Stark  temporary123
+Point Break PointBreak123
