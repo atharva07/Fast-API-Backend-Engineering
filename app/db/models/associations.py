@@ -26,11 +26,6 @@ class ProjectUser(Base):
         primary_key=True
     )
 
-    role: Mapped[str] = mapped_column(
-        String(30),
-        nullable=False
-    )
-
     # These are ORM relationships
 
     # A project_user can have one project

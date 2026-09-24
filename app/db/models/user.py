@@ -3,6 +3,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 from app.db.models.associations import ProjectUser
+from app.models.role import UserRole
 
 if TYPE_CHECKING:
     from app.db.models.associations import ProjectUser
@@ -33,4 +34,10 @@ class User(Base):
     project_users: Mapped[list["ProjectUser"]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan"
+    )
+
+    user_role: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+        default=UserRole.VIEWER.value
     )

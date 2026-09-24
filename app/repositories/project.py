@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.db.models.project import Project
+from app.db.models.associations import ProjectUser
 
 class ProjectRepository:
     def __init__(self, db: Session):
@@ -24,6 +25,19 @@ class ProjectRepository:
     def get_all(self) -> list[Project]:
         return self.db.execute(
             select(Project)
+        ).scalars().all()
+
+    # Get by user
+    def get_by_user(self, user_id: int) -> list[Project]:
+        return self.db.execute(
+            select(Project)
+            .join(
+                ProjectUser,
+                ProjectUser.project_id == Project.id,
+            )
+            .where(
+                ProjectUser.user_id == user_id
+            )
         ).scalars().all()
 
     # Add new Project

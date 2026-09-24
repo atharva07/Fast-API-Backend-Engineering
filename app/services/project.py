@@ -2,6 +2,8 @@ from sqlalchemy.exc import IntegrityError
 from app.db.models.project import Project
 from app.db.unit_of_work import UnitOfWork
 from app.exceptions.project import ProjectAlreadyExistsError, ProjectNotFoundError
+from app.db.models.user import User
+from app.models.system_role import SystemRole
 
 class ProjectService:
     def __init__(self,uow: UnitOfWork):
@@ -30,10 +32,23 @@ class ProjectService:
     """
         This is a GET Request
     """
-    def get_projects(self) -> list[Project]:
+    def get_all_projects(self) -> list[Project]:
         with self.uow:
             return self.uow.projects.get_all()
 
+    """
+        This is GET Request
+    """
+    def get_project_for_users(self, user_id: int, current_user: User) -> list[Project]:
+        if current_user.system_role == SystemRole.ADMIN.value:
+            return self.get_all_projects()
+        
+        with self.uow:
+            return self.uow.projects.get_by_user(user_id)
+
+    """
+        This is a GET Request
+    """
     def get_project(self, project_id: int) -> Project:
         with self.uow:
             project = self.uow.projects.get_by_id(project_id)
