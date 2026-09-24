@@ -16,7 +16,6 @@ def add_member(project_id: int, membership: ProjectMembership, uow: UnitOfWork =
     return service.add_member(
         project_id=project_id,
         user_id=membership.user_id,
-        role=membership.role.value
     )
 
 @router.get("/{project_id}/members/{user_id}")

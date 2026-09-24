@@ -145,8 +145,9 @@ Current Database looks like below conceptually
 
 Passwords for Testing
 
-Atharva     atharva123
-Rahul       rahul123
-Priya       priya123
-Tony Stark  temporary123
-Point Break PointBreak123
+Atharva         atharva123
+Rahul           rahul123
+Priya           priya123
+Tony Stark      temporary123
+Point Break     PointBreak123
+Captain America CaptainAmerica123

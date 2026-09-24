@@ -7,28 +7,26 @@ class ProjectMembershipService:
     def __init__(self, uow: UnitOfWork):
         self.uow = uow
 
-    def add_member(self, project_id:int, user_id: int, role: str) -> ProjectUser:
+    def add_member(self, project_id: int, user_id: int) -> ProjectUser:
         with self.uow:
             project = self.uow.projects.get_by_id(project_id)
 
             if project is None:
                 raise ProjectMembershipNotFoundError("Project not Found")
 
-            user = self.uow.projects.get_by_id(user_id)
+            user = self.uow.users.get_by_id(user_id)
 
             if user is None:
                 raise ProjectMembershipNotFoundError("User not Found")
 
-            existing = (
-                self.uow.project_membership.get_membership(project_id, user_id)
-            )
+            existing = self.uow.project_membership.get_membership(project_id, user_id)
 
             if existing is not None:
                 raise ProjectMembershipAlreadyExistsError(
                     "User is already a member of this project"
                 )
 
-            membership = ProjectUser(project_id=project_id, user_id=user_id, role=role)
+            membership = ProjectUser(project_id=project_id, user_id=user_id)
 
             self.uow.project_membership.add(membership)
 

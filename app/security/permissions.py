@@ -36,5 +36,3 @@ ROLE_PERMISSIONS: dict[UserRole, set[Permission]] = {
         Permission.TEST_CASE_VIEW
     },
 }
-
-

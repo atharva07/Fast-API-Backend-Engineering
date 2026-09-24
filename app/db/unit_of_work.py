@@ -16,7 +16,7 @@ class UnitOfWork:
         self.test_suites = TestSuiteRepository(db)
         self.test_results = TestResultRepository(db)
         self.users = UserRepository(db)
-        self.project_membership = ProjectMembeshipRepository(db)
+        self.project_memberships = ProjectMembeshipRepository(db)
 
     def __enter__(self):
         return self
