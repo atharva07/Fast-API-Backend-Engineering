@@ -151,3 +151,16 @@ Priya           priya123
 Tony Stark      temporary123
 Point Break     PointBreak123
 Captain America CaptainAmerica123
+
+# Running tests
+
+Install the dependencies and run the baseline sanity suite:
+
+```bash
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pytest
+```
+
+The tests in `tests/` exercise validation, authentication primitives, authorization
+rules, the health response, and project-service behavior without requiring a
+PostgreSQL connection.

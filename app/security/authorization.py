@@ -9,11 +9,8 @@ from app.security.dependencies import get_current_user
 from app.models.permission import Permission
 from app.security.permissions import ROLE_PERMISSIONS
 
-def get_project_membership(
-        project_id: int,
-        current_user: User = Depends(get_current_user), 
-        uow: UnitOfWork = Depends(get_unit_of_work)
-):
+def get_project_membership(project_id: int, current_user: User = Depends(get_current_user),
+            uow: UnitOfWork = Depends(get_unit_of_work)):
     if current_user.user_role == UserRole.ADMIN.value:
         return None
     
