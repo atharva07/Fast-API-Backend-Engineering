@@ -33,7 +33,6 @@ from app.models.permission import Permission
     Now, after resolving the dependency, FastAPI finally executes get_project method and return the project associated with the user.
 """
 
-
 router = APIRouter(
     prefix="/api/projects",
     tags=["Projects"],

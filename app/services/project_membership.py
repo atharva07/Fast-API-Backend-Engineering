@@ -19,7 +19,7 @@ class ProjectMembershipService:
             if user is None:
                 raise ProjectMembershipNotFoundError("User not Found")
 
-            existing = self.uow.project_membership.get_membership(project_id, user_id)
+            existing = self.uow.project_memberships.get_membership(project_id, user_id)
 
             if existing is not None:
                 raise ProjectMembershipAlreadyExistsError(
@@ -28,7 +28,7 @@ class ProjectMembershipService:
 
             membership = ProjectUser(project_id=project_id, user_id=user_id)
 
-            self.uow.project_membership.add(membership)
+            self.uow.project_memberships.add(membership)
 
             try:
                 self.uow.commit()
@@ -44,7 +44,7 @@ class ProjectMembershipService:
     def get_membership(self, project_id: int, user_id: int) -> ProjectUser:
         with self.uow:
             membership = (
-                self.uow.project_membership.get_membership(project_id, user_id)
+                self.uow.project_memberships.get_membership(project_id, user_id)
             )
 
             if membership is None:

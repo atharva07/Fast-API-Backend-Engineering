@@ -8,16 +8,22 @@ from app.models.test_suite import (
 )
 from app.db.models.user import User
 from app.services.test_suite import TestSuiteService
-from app.security.authorization import require_suite_permission
+from app.security.authorization import require_suite_permission, require_project_permission
 from app.models.permission import Permission
 
-router = APIRouter(prefix="/api", tags=["Test Suites"])
+router = APIRouter(
+    prefix="/api", 
+    tags=["Test Suites"]
+)
 
 """
     POST Request
 """
 @router.post("/projects/{project_id}/suites", response_model=TestSuiteResponse, status_code=status.HTTP_201_CREATED)
-def create_suite(project_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def create_suite(project_id: int, 
+                suite: TestSuiteCreate, 
+                current_user = Depends(require_project_permission(Permission.TEST_SUITE_CREATE)), 
+                uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.create_suite(
@@ -30,7 +36,9 @@ def create_suite(project_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depe
     GET Request
 """
 @router.get("/projects/{project_id}/suites", response_model=list[TestSuiteResponse])
-def get_suites(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def get_suites(project_id: int, 
+               current_user = Depends(require_project_permission(Permission.TEST_SUITE_VIEW)),
+               uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.get_suites(project_id)
@@ -50,7 +58,8 @@ def get_suite(suite_id: int, current_user: User = Depends(require_suite_permissi
     PUT Request
 """
 @router.put("/suites/{suite_id}", response_model=TestSuiteResponse)
-def replace_suite(suite_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def replace_suite(suite_id: int, suite: TestSuiteCreate, current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_UPDATE)),
+                uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.replace_suite(
@@ -63,7 +72,8 @@ def replace_suite(suite_id: int, suite: TestSuiteCreate, uow: UnitOfWork = Depen
     PATCH Request
 """
 @router.patch("/suites/{suite_id}", response_model=TestSuiteResponse)
-def update_suite(suite_id: int, suite: TestSuiteUpdate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def update_suite(suite_id: int, suite: TestSuiteUpdate, current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_UPDATE)),
+                uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.update_suite(
@@ -76,7 +86,8 @@ def update_suite(suite_id: int, suite: TestSuiteUpdate, uow: UnitOfWork = Depend
     DELETE Request
 """
 @router.delete("/suites/{suite_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_suite(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def delete_suite(suite_id: int, current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_DELETE)), 
+                uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     service.delete_suite(suite_id)
