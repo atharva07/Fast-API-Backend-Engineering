@@ -6,7 +6,10 @@ from app.models.test_suite import (
     TestSuiteResponse,
     TestSuiteUpdate,
 )
+from app.db.models.user import User
 from app.services.test_suite import TestSuiteService
+from app.security.authorization import require_suite_permission
+from app.models.permission import Permission
 
 router = APIRouter(prefix="/api", tags=["Test Suites"])
 
@@ -36,7 +39,9 @@ def get_suites(project_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     GET Request
 """
 @router.get("/suites/{suite_id}", response_model=TestSuiteResponse)
-def get_suite(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def get_suite(suite_id: int, current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_VIEW)), 
+            uow: UnitOfWork = Depends(get_unit_of_work)
+):
     service = TestSuiteService(uow)
 
     return service.get_suite(suite_id)
