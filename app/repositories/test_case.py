@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.db.models.test_case import TestCase
+from app.db.models.test_suite import TestSuite
 
 class TestCaseRepository:
     def __init__(self, db: Session):
@@ -25,8 +26,14 @@ class TestCaseRepository:
 
     def add(self, test_case: TestCase) -> TestCase:
         self.db.add(test_case)
-
         return test_case
 
     def delete(self, test_case: TestCase) -> None:
         self.db.delete(test_case)
+
+    def get_project_id(self, test_case_id: int) -> int | None:
+        return self.db.execute(
+            select(TestSuite.project_id)
+            .join(TestCase.suite_id == TestSuite.id)
+            .where(TestCase.id == test_case_id)
+        ).scalar_one_or_none()

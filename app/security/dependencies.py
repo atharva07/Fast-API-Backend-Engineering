@@ -8,6 +8,9 @@ from app.db.unit_of_work import UnitOfWork
 
 bearer_scheme = HTTPBearer()
 
+"""
+    This is Authentication part
+"""
 def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)) -> int:
     token = credentials.credentials
 

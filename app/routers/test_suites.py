@@ -1,11 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
-from app.models.test_suite import (
-    TestSuiteCreate,
-    TestSuiteResponse,
-    TestSuiteUpdate,
-)
+from app.models.test_suite import TestSuiteCreate, TestSuiteResponse, TestSuiteUpdate
 from app.db.models.user import User
 from app.services.test_suite import TestSuiteService
 from app.security.authorization import require_suite_permission, require_project_permission

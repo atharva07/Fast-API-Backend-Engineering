@@ -9,6 +9,7 @@ from app.security.dependencies import get_current_user
 from app.models.permission import Permission
 from app.security.permissions import ROLE_PERMISSIONS
 from app.exceptions.test_suite import TestSuiteNotFoundError
+from app.exceptions.test_case import TestCaseNotFoundError
 
 """
     Get related data
@@ -19,6 +20,15 @@ def get_suite_project_id(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_wo
 
         if project_id is None:
             raise TestSuiteNotFoundError("Test Suite Not Found")
+
+        return project_id
+
+def get_test_case_project_id(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)) -> int:
+    with uow:
+        project_id = uow.test_cases.get_project_id(test_case_id)
+
+        if project_id is None:
+            raise TestCaseNotFoundError("Test Case Not Found")
 
         return project_id
 
@@ -50,6 +60,26 @@ def get_suite_project_membership(project_id: int = Depends(get_suite_project_id)
             uow.project_memberships.get_membership(
                 project_id=project_id,
                 user_id=current_user.id
+            )
+        )
+
+        if membership is None:
+            raise ProjectAccessDeniedError(
+                "You do not have access to this project"
+            )
+
+        return membership
+
+def get_test_case_project_membership(project_id: int = Depends(get_test_case_project_id), current_user: User = Depends(get_current_user),
+                                uow: UnitOfWork = Depends(get_unit_of_work)):
+    if current_user.user_role == UserRole.ADMIN.value:
+        return None
+
+    with uow:
+        membership = (
+            uow.project_memberships.get_membership(
+                project_id=project_id,
+                current_user=current_user.id
             )
         )
 
@@ -100,9 +130,27 @@ def require_suite_permission(required_permission: Permission):
 
         if required_permission not in permissions:
             raise ProjectAccessDeniedError(
-                "You do not permission to perform this action"
+                "You do not have permission to perform this action"
             )
 
         return current_user
     
     return permission_checker
+
+def require_test_case_permission(required_permission: Permission):
+    def premission_checker(
+            current_user: User = Depends(get_current_user),
+            membership = Depends(get_test_case_project_membership)
+    ):
+        role = UserRole(current_user.user_role)
+
+        permissions = ROLE_PERMISSIONS.get(role, set())
+
+        if required_permission not in permissions:
+            raise ProjectAccessDeniedError(
+                "You do not have permission to perform this action"
+            )
+
+        return current_user
+
+    return premission_checker

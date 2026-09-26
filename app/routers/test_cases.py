@@ -1,22 +1,24 @@
-from typing import Annotated
 from fastapi import Depends, APIRouter, Response, status
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-from app.db.dependencies import (DBSession, get_test_case_service, get_unit_of_work,)
-from app.db.models.test_case import TestCase
+from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
-from app.repositories.test_case import TestCaseRepository
-from app.models.test_result import TestResultResponse
 from app.services.test_case import TestCaseService
+from app.security.authorization import require_suite_permission, require_test_case_permission
+from app.models.permission import Permission
+from app.db.models.user import User
 
-router = APIRouter(prefix="/api", tags=["Test Cases"])
+router = APIRouter(
+    prefix="/api", 
+    tags=["Test Cases"]
+)
 
 """
     GET all Test Cases Request
 """
 @router.get("/suites/{suite_id}/test_cases", response_model=list[TestCaseResponse])
-def get_test_cases(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def get_test_cases(suite_id: int,
+                    current_user: User = Depends(require_suite_permission(Permission.TEST_CASE_VIEW)),
+                    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     return service.get_test_cases_by_suite(suite_id)
@@ -25,7 +27,9 @@ def get_test_cases(suite_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     POST Request
 """
 @router.post("/suites/{suite_id}/test_cases", response_model=TestCaseResponse, status_code=status.HTTP_201_CREATED)
-def create_test_case(suite_id: int, test_case: TestCaseCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def create_test_case(suite_id: int, test_case: TestCaseCreate,
+                    current_user = Depends(require_suite_permission(Permission.TEST_CASE_CREATE)), 
+                    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     return service.create_test_case(
@@ -36,10 +40,12 @@ def create_test_case(suite_id: int, test_case: TestCaseCreate, uow: UnitOfWork =
     )
 
 """
-    GET Request
+    Individual Test Case GET Request
 """
 @router.get("/test_cases/{test_case_id}", response_model=TestCaseResponse)
-def get_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def get_test_case(test_case_id: int, 
+                  current_user: User = Depends(require_test_case_permission(Permission.TEST_CASE_VIEW)),
+                  uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     return service.get_test_case(test_case_id)
@@ -48,7 +54,9 @@ def get_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)
     PUT Request
 """
 @router.put("/test_cases/{test_case_id}", response_model=TestCaseResponse)
-def replace_test_case(test_case_id: int, test_case: TestCaseCreate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def replace_test_case(test_case_id: int, test_case: TestCaseCreate,
+                    current_user: User = Depends(require_test_case_permission(Permission.TEST_CASE_UPDATE)),
+                    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     return service.replace_test_case(
@@ -62,7 +70,9 @@ def replace_test_case(test_case_id: int, test_case: TestCaseCreate, uow: UnitOfW
     PATCH Request
 """
 @router.patch("/test_cases/{test_case_id}", response_model=TestCaseResponse)
-def update_test_case(test_case_id: int, test_case: TestCaseUpdate, uow: UnitOfWork = Depends(get_unit_of_work)):
+def update_test_case(test_case_id: int, test_case: TestCaseUpdate,
+                    current_user: User = Depends(require_test_case_permission(Permission.TEST_CASE_UPDATE)), 
+                    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     return service.update_test_case(
@@ -76,7 +86,9 @@ def update_test_case(test_case_id: int, test_case: TestCaseUpdate, uow: UnitOfWo
     DELETE Request
 """
 @router.delete("/test_cases/{test_case_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def delete_test_case(test_case_id: int, 
+                    current_user: User = Depends(require_test_case_permission(Permission.TEST_CASE_DELETE)),
+                    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     service.delete_test_case(test_case_id)
