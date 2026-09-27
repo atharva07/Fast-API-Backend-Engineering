@@ -3,6 +3,7 @@ from app.db.models.user import User
 from app.db.unit_of_work import UnitOfWork
 from app.exceptions.user import UserAlreadyExistsExceptions, UserNotFoundError
 from app.security.password import hash_password
+from app.models.role import UserRole
 
 class UserService:
     def __init__(self, uow: UnitOfWork):
@@ -44,4 +45,20 @@ class UserService:
     def get_users(self) -> list[User]:
         with self.uow:
             return self.uow.users.get_all()
+
+    def update_user_role(self, user_id: int, user_role: UserRole) -> User:
+        with self.uow:
+            user = self.uow.users.get_by_id(user_id)
+
+            if user is None:
+                raise UserNotFoundError("User Not Found")
+
+            user.user_role = user_role.value
+
+            try:
+                self.uow.commit()
+            except IntegrityError as exc:
+                self.uow.rollback()
+
+            return user
         

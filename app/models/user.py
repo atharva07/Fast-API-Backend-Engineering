@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from app.models.role import UserRole
 
 class UserCreate(BaseModel):
     name: str = Field(min_length=2)
@@ -13,3 +14,6 @@ class UserResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class UserRoleUpdate(BaseModel):
+    user_role: UserRole
