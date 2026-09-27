@@ -5,7 +5,6 @@ from app.models.project import (ProjectCreate, ProjectResponse, ProjectUpdate)
 from app.services.project import ProjectService
 from app.db.models.user import User
 from app.security.dependencies import get_current_user
-from app.security.authorization import get_project_membership
 from app.security.authorization import require_project_permission, require_global_permission
 from app.models.permission import Permission
 
