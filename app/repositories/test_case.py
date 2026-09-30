@@ -34,6 +34,6 @@ class TestCaseRepository:
     def get_project_id(self, test_case_id: int) -> int | None:
         return self.db.execute(
             select(TestSuite.project_id)
-            .join(TestCase.suite_id == TestSuite.id)
+            .join(TestCase, TestCase.suite_id == TestSuite.id)
             .where(TestCase.id == test_case_id)
         ).scalar_one_or_none()

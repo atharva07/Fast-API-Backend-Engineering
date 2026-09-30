@@ -50,7 +50,8 @@ def get_project_membership(project_id: int, current_user: User = Depends(get_cur
 
         return membership
 
-def get_suite_project_membership(project_id: int = Depends(get_suite_project_id), current_user: User = Depends(get_current_user),
+def get_suite_project_membership(project_id: int = Depends(get_suite_project_id), 
+                                current_user: User = Depends(get_current_user),
                                 uow: UnitOfWork = Depends(get_unit_of_work)):
     if current_user.user_role == UserRole.ADMIN.value:
         return None
@@ -70,7 +71,8 @@ def get_suite_project_membership(project_id: int = Depends(get_suite_project_id)
 
         return membership
 
-def get_test_case_project_membership(project_id: int = Depends(get_test_case_project_id), current_user: User = Depends(get_current_user),
+def get_test_case_project_membership(project_id: int = Depends(get_test_case_project_id), 
+                                current_user: User = Depends(get_current_user),
                                 uow: UnitOfWork = Depends(get_unit_of_work)):
     if current_user.user_role == UserRole.ADMIN.value:
         return None

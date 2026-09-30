@@ -17,7 +17,9 @@ class TestSuite(Base):
 
     name: Mapped[str] = mapped_column(
         String(255),
+        # This is a Cardinality
         nullable=False,
+        # This is a Constraints
         unique=True
     )
 

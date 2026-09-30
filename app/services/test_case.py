@@ -123,7 +123,7 @@ class TestCaseService:
     """
         This is a PATCH Request
     """
-    def update_test_case(self, test_case_id: int, name: str | None, description: str | None, priority: str) -> TestCase:
+    def update_test_case(self, test_case_id: int, name: str | None, description: str | None, priority: str, status: str | None) -> TestCase:
         with self.uow:
             test_case = self.uow.test_cases.get_by_id(test_case_id)
 
@@ -138,6 +138,9 @@ class TestCaseService:
 
             if priority is not None:
                 test_case.priority = priority
+
+            if status is not None:
+                test_case.status = status
 
             try:
                 self.uow.commit()

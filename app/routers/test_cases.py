@@ -1,11 +1,13 @@
-from fastapi import Depends, APIRouter, Response, status
+from fastapi import Depends, APIRouter, Response, status, BackgroundTasks
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
+from app.models.test_result import TestResultResponse
 from app.services.test_case import TestCaseService
 from app.security.authorization import require_suite_permission, require_test_case_permission
 from app.models.permission import Permission
 from app.db.models.user import User
+from app.background.tasks import run_test_case
 
 router = APIRouter(
     prefix="/api", 
@@ -79,7 +81,8 @@ def update_test_case(test_case_id: int, test_case: TestCaseUpdate,
         test_case_id=test_case_id,
         name=test_case.name,
         description=test_case.description,
-        priority=test_case.priority
+        priority=test_case.priority,
+        status=test_case.status
     )
 
 """
@@ -98,8 +101,18 @@ def delete_test_case(test_case_id: int,
 """
     POST Execute Request
 """
-@router.post("/test_cases/{test_case_id}/execute", response_model=TestCaseResponse)
-def execute_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+@router.post("/test_cases/{test_case_id}/execute", response_model=TestResultResponse, status_code=status.HTTP_202_ACCEPTED)
+def execute_test_case(test_case_id: int, 
+                      background_tasks: BackgroundTasks,
+                      uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
-    return service.execute_test_case(test_case_id)
+    result = service.execute_test_case(test_case_id)
+
+    background_tasks.add_task(
+        run_test_case,
+        test_case_id,
+        result.id
+    )
+
+    return result
