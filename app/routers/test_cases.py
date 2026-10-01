@@ -1,4 +1,6 @@
 from fastapi import Depends, APIRouter, Response, status, BackgroundTasks
+from app.background.job import TestExecutionJob
+from app.background.queue import job_queue
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
@@ -8,6 +10,7 @@ from app.security.authorization import require_suite_permission, require_test_ca
 from app.models.permission import Permission
 from app.db.models.user import User
 from app.background.tasks import run_test_case
+
 
 router = APIRouter(
     prefix="/api", 
@@ -102,17 +105,16 @@ def delete_test_case(test_case_id: int,
     POST Execute Request
 """
 @router.post("/test_cases/{test_case_id}/execute", response_model=TestResultResponse, status_code=status.HTTP_202_ACCEPTED)
-def execute_test_case(test_case_id: int, 
-                      background_tasks: BackgroundTasks,
-                      uow: UnitOfWork = Depends(get_unit_of_work)):
+def execute_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     result = service.execute_test_case(test_case_id)
 
-    background_tasks.add_task(
-        run_test_case,
-        test_case_id,
-        result.id
+    job = TestExecutionJob(
+        test_case_id=test_case_id,
+        result_id=result.id
     )
+
+    job_queue.put(job)
 
     return result

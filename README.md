@@ -165,3 +165,47 @@ Install the dependencies and run the baseline sanity suite:
 The tests in `tests/` exercise validation, authentication primitives, authorization
 rules, the health response, and project-service behavior without requiring a
 PostgreSQL connection.
+
+
+# Research Topic for Software Testing LLM
+
+        AI SOFTWARE TESTING
+        │
+        ├── 1. LLMs for Software Testing
+        │
+        ├── 2. LLM Test Generation
+        │
+        ├── 3. LLM Test Design / QA Reasoning
+        │
+        ├── 4. AI Testing Agents
+        │
+        ├── 5. Agent Architecture
+        │     ├── Planning
+        │     ├── Tool Calling
+        │     ├── Memory
+        │     ├── Observation
+        │     ├── Action
+        │     └── Agent Loops
+        │
+        ├── 6. Testing Tools
+        │     ├── Browser
+        │     ├── API
+        │     ├── Database
+        │     ├── CLI
+        │     └── Cloud
+        │   
+        ├── 7. Test Execution
+        │
+        ├── 8. Test Oracle
+        │
+        ├── 9. Failure Analysis
+        │
+        ├── 10. Autonomous / Exploratory Testing
+        │
+        ├── 11. Multi-Agent Testing
+        │
+        ├── 12. Testing Memory / Knowledge
+        │
+        ├── 13. Evaluation & Benchmarks
+        │
+        └── 14. Existing Products / Research Prototypes
