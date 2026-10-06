@@ -10,7 +10,8 @@ def send_test_execution(test_case_id: int, result_id: int) -> None:
 
         message = {
             "test_case_id": test_case_id,
-            "result_id": result_id
+            "result_id": result_id,
+            "attempts": 0,
         }
 
         channel.basic_publish(exchange="", routing_key=RABBITMQ_QUEUE, body=json.dumps(message))
