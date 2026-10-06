@@ -81,7 +81,7 @@ def get_test_case_project_membership(project_id: int = Depends(get_test_case_pro
         membership = (
             uow.project_memberships.get_membership(
                 project_id=project_id,
-                current_user=current_user.id
+                user_id=current_user.id
             )
         )
 

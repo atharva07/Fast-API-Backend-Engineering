@@ -37,7 +37,7 @@ def worker() -> None:
 
     print(f"{worker_name} started")
 
-    while True:
+    while True: # Runs forever, until you shut it down
         job = get_job()
 
         try:
@@ -54,7 +54,7 @@ def worker() -> None:
                 f"{worker_name}: ACK "
                 f"test_case={job.test_case_id} "
             )
-
+                        
         except Exception as exc:
             print(
                 f"{worker_name}: Job Failed "
