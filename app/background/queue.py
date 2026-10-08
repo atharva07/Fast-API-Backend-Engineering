@@ -1,7 +1,6 @@
 from queue import Queue
 from threading import Lock
 import time
-
 from app.background.job import TestExecutionJob
 
 job_queue = Queue()

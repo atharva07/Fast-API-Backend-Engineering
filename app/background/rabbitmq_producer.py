@@ -2,7 +2,7 @@ import json
 from app.background.rabbitmq import create_connection, declare_queue
 from app.core.rabbitmq import RABBITMQ_QUEUE
 
-def send_test_execution(test_case_id: int, result_id: int) -> None:
+def send_test_execution(test_case_id: int, execution_id: int) -> None:
     connection = create_connection()
     try:
         channel = connection.channel()
@@ -10,7 +10,7 @@ def send_test_execution(test_case_id: int, result_id: int) -> None:
 
         message = {
             "test_case_id": test_case_id,
-            "result_id": result_id,
+            "execution_id": execution_id,
             "attempts": 0,
         }
 

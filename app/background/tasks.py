@@ -1,5 +1,4 @@
 import time
-
 from app.db.database import SessionLocal
 from app.db.models.test_result import TestResult
 

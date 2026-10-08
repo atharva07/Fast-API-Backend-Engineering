@@ -9,7 +9,7 @@ from app.services.test_case import TestCaseService
 from app.security.authorization import require_suite_permission, require_test_case_permission
 from app.models.permission import Permission
 from app.db.models.user import User
-from app.background.tasks import run_test_case
+from app.background.rabbitmq_producer import send_test_execution
 
 
 router = APIRouter(
@@ -110,11 +110,14 @@ def execute_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_w
 
     result = service.execute_test_case(test_case_id)
 
-    job = TestExecutionJob(
-        test_case_id=test_case_id,
-        result_id=result.id
+    print(
+        f"Publishing execution {result.id} "
+        f"to RabbitMQ"
     )
 
-    job_queue.put(job)
+    send_test_execution(
+        test_case_id=test_case_id,
+        execution_id=result.id
+    )
 
     return result

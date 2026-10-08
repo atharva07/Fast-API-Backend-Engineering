@@ -3,6 +3,8 @@ import time
 from app.background.rabbitmq import create_connection, declare_queue
 from app.core.rabbitmq import RABBITMQ_QUEUE
 from app.background.rabbitmq_retry import publish_retry
+from app.db.database import SessionLocal
+from app.repositories.test_result import TestResultRepository
 
 def process_test_execution(test_case_id: int, result_id: int) -> None:
     print(
@@ -10,18 +12,14 @@ def process_test_execution(test_case_id: int, result_id: int) -> None:
         f"result_id={result_id}"  
     )
 
-    # if test_case_id == 33:
-    #     raise RuntimeError(
-    #         "Temporary Failure"
-    #     )
+    if test_case_id == 33:
+        raise RuntimeError(
+            "Temporary Failure"
+        )
 
-    # print(
-    #     "Execution Successful"
-    # )
-
-    # raise RuntimeError(
-    #     "Simulated execution failure"
-    # )
+    print(
+        "Execution Successful"
+    )
 
     time.sleep(10)
 
@@ -46,28 +44,69 @@ def start_worker(worker_name: str) -> None:
         properties,
         body
     ):  
-        message = json.loads(body)
-        test_case_id = message["test_case_id"]
-        result_id = message["result_id"]
-        attempts = message.get("attempts",0,)
+        db = SessionLocal()
 
-        print(
-            f"{worker_name} processing "
-            f"test_case = {test_case_id} "
-            f"attempt = {attempts + 1} "
-        )
         try:
-            process_test_execution(test_case_id=test_case_id, result_id=result_id)
+            message = json.loads(body)
+            execution_id = message["execution_id"]
+            test_case_id = message["test_case_id"]
+            attempts = message.get("attempts",0,)
+
+            repository = TestResultRepository(db)
+
+            result = repository.get_by_id(execution_id)
+
+            if result is None:
+                print(
+                    f"Execution {execution_id} "
+                    f"does not exist"
+                )
+
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+
+                return
+
+            if result.status in {
+                "PASSED",
+                "FAILED",
+            }:
+                print(
+                    f"Execution {execution_id} "
+                    f"already completed: "
+                    f"{result.status}"
+                )   
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+
+                return
+            
+            print(
+                f"{worker_name} executing "
+                f"execution={execution_id} "
+                f"test_case={test_case_id}"
+            )
+
+            process_test_execution(test_case_id=test_case_id, result_id=execution_id)
+
+            result.status = "PASSED"
+
+            db.commit()
+
+            print(
+                f"Execution {execution_id} "
+                f"completed successfully"
+            )
+
             ch.basic_ack(delivery_tag=method.delivery_tag)
-            print(f"{worker_name} acknowledged job")
             
         except Exception as exc:
+            db.rollback()
+
             print(f"{worker_name} Failed Job: {exc}")
 
             attempts += 1
 
             if attempts <= MAX_RETRIES:
-                publish_retry(test_case_id=test_case_id, result_id=result_id, attempts=attempts)
+                publish_retry(test_case_id=test_case_id, result_id=execution_id, attempts=attempts)
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 print(
@@ -76,6 +115,9 @@ def start_worker(worker_name: str) -> None:
                 )
 
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+
+        finally:
+            db.close()
 
     channel.basic_qos(
         prefetch_count=1
