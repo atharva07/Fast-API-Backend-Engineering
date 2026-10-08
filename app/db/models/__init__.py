@@ -5,3 +5,4 @@ from app.db.models.user import User
 from app.db.models.associations import ProjectUser
 from app.db.models.audit_log import Auditlog
 from app.db.models.test_suite import TestSuite
+from app.db.models.outbox_event import OutboxEvent

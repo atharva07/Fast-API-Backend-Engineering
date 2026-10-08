@@ -115,9 +115,9 @@ def execute_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_w
         f"to RabbitMQ"
     )
 
-    send_test_execution(
-        test_case_id=test_case_id,
-        execution_id=result.id
-    )
+    # send_test_execution(
+    #     test_case_id=test_case_id,
+    #     execution_id=result.id
+    # )
 
     return result

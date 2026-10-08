@@ -1,5 +1,7 @@
+import json
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from app.db.models.outbox_event import OutboxEvent
 from app.db.models.test_case import TestCase
 from app.db.models.test_result import TestResult
 from app.models.test_case import Priority
@@ -34,8 +36,20 @@ class TestCaseService:
         result = TestResult(test_case_id=test_case.id, status="RUNNING")
 
         self.uow.db.add(result)
+        self.uow.db.flush()
         audit_log = Auditlog(test_case_id=test_case.id, action="TEST_EXECUTION_STARTED")
         self.uow.audit_logs.add(audit_log)
+
+        outbox_event = OutboxEvent(
+            event_type="TEST_EXECUTION_REQUESTED",
+            payload=json.dumps({
+                "execution_id": result.id,
+                "test_case_id": test_case.id,
+            }),
+            status="PENDING",
+        )
+        
+        self.uow.outbox_events.add(outbox_event)
         self.uow.commit()
         self.uow.db.refresh(result)
 
