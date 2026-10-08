@@ -26,3 +26,13 @@ RABBITMQ_DLX = os.getenv(
     "RABBITMQ_DLX",
     "qaforge-test-execution-dlx"
 )
+
+RABBITMQ_RETRY_QUEUE = os.getenv(
+    "RABBITMQ_RETRY_QUEUE",
+    "qaforge-test-execution-retry"
+)
+
+RABBITMQ_RETRY_ROUTING_KEY = os.getenv(
+    "RABBITMQ_RETRY_ROUTING_KEY",
+    "qaforge-test-execution-tetry"
+)

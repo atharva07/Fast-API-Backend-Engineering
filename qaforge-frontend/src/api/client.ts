@@ -21,7 +21,7 @@ apiClient.interceptors.request.use(
   }
 )
 
-// Handle authentication failures
+// Handle authentication failures, this will redirect to login screen if the token in expired and returns 401.
 apiClient.interceptors.response.use(
   (response) => {
     return response

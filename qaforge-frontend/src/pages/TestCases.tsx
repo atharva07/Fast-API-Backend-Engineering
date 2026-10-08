@@ -20,7 +20,6 @@ import {
   type TestExecution,
 } from '../api/testCases'
 
-
 function TestCases() {
   // Projects
   const [projects, setProjects] = useState<Project[]>([])

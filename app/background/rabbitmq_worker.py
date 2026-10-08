@@ -2,6 +2,7 @@ import json
 import time
 from app.background.rabbitmq import create_connection, declare_queue
 from app.core.rabbitmq import RABBITMQ_QUEUE
+from app.background.rabbitmq_retry import publish_retry
 
 def process_test_execution(test_case_id: int, result_id: int) -> None:
     print(
@@ -9,17 +10,26 @@ def process_test_execution(test_case_id: int, result_id: int) -> None:
         f"result_id={result_id}"  
     )
 
-    raise RuntimeError(
-        "Simulated execution failure"
-    )
-
-    # time.sleep(10)
+    # if test_case_id == 33:
+    #     raise RuntimeError(
+    #         "Temporary Failure"
+    #     )
 
     # print(
-    #     f"Test Execution completed: "
-    #     f"test_case={test_case_id}, "
-    #     f"result_id={result_id}"
+    #     "Execution Successful"
     # )
+
+    # raise RuntimeError(
+    #     "Simulated execution failure"
+    # )
+
+    time.sleep(10)
+
+    print(
+        f"Test Execution completed: "
+        f"test_case={test_case_id}, "
+        f"result_id={result_id}"
+    )
 
 def start_worker(worker_name: str) -> None:
     connection = create_connection()
@@ -39,41 +49,30 @@ def start_worker(worker_name: str) -> None:
         message = json.loads(body)
         test_case_id = message["test_case_id"]
         result_id = message["result_id"]
-
-        attempts = message.get(
-            "attempts",
-            0,
-        )
+        attempts = message.get("attempts",0,)
 
         print(
             f"{worker_name} processing "
             f"test_case = {test_case_id} "
             f"attempt = {attempts + 1} "
         )
-
         try:
             process_test_execution(test_case_id=test_case_id, result_id=result_id)
-
             ch.basic_ack(delivery_tag=method.delivery_tag)
-
-            print(f"{worker_name} Job Acknowledged")
-
+            print(f"{worker_name} acknowledged job")
+            
         except Exception as exc:
             print(f"{worker_name} Failed Job: {exc}")
 
             attempts += 1
 
-            if attempts >= MAX_RETRIES:
-                print(
-                    f"{worker_name}: "
-                    f"max retries reached"
-                )
-
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            if attempts <= MAX_RETRIES:
+                publish_retry(test_case_id=test_case_id, result_id=result_id, attempts=attempts)
+                ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 print(
                     f"{worker_name}: "
-                    f"retrying job"
+                    f"maximum retries exceeded"
                 )
 
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
