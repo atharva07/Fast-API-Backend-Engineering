@@ -31,3 +31,8 @@ class OutboxEvent(Base):
         nullable=False,
         default=datetime.utcnow
     )
+
+    processing_started_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
+    )

@@ -1,5 +1,6 @@
 import json
 import time
+import pika
 from app.background.rabbitmq import create_connection
 from app.core.rabbitmq import RABBITMQ_QUEUE
 from app.db.database import SessionLocal
@@ -8,15 +9,24 @@ from app.repositories.outbox_event import OutboxEventRepository
 def publish_pending_events() -> None:
     connection = create_connection()
     channel = connection.channel()
-
     db = SessionLocal()
 
     try:
         repository = OutboxEventRepository(db)
 
-        events = repository.get_pending_events()
+        recovered = repository.reset_stuck_events()
+        if recovered:
+            print(
+                f"Recovered {recovered} stuck "
+                f"outbox event(s)"
+            )
 
-        for event in events:
+        while True:
+            event = repository.claim_pending_event()
+
+            if event is None:
+                break
+
             try:
                 message = json.loads(event.payload)
 
@@ -24,13 +34,12 @@ def publish_pending_events() -> None:
                     exchange="",
                     routing_key=RABBITMQ_QUEUE,
                     body=json.dumps(message),
-                    properties=__import__("pika").BasicProperties(
-                        delivery_mode=2,
-                    ),
+                    properties=pika.BasicProperties(
+                        delivery_mode=2
+                    )
                 )
 
                 event.status = "PUBLISHED"
-
                 db.commit()
 
                 print(

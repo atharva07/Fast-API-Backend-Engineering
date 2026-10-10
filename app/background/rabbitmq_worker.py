@@ -12,11 +12,6 @@ def process_test_execution(test_case_id: int, result_id: int) -> None:
         f"result_id={result_id}"  
     )
 
-    if test_case_id == 33:
-        raise RuntimeError(
-            "Temporary Failure"
-        )
-
     print(
         "Execution Successful"
     )
@@ -45,13 +40,24 @@ def start_worker(worker_name: str) -> None:
         body
     ):  
         db = SessionLocal()
+        attempts = 0
 
         try:
             message = json.loads(body)
-            execution_id = message["execution_id"]
-            test_case_id = message["test_case_id"]
-            attempts = message.get("attempts",0,)
+            execution_id = message.get("execution_id")
+            test_case_id = message.get("test_case_id")
 
+            if execution_id is None or test_case_id is None:
+                print(f"Invalid Message : {message}")
+
+                ch.basic_nack(
+                    delivery_tag = method.delivery_tag,
+                    requeue=False
+                )
+
+                return
+            
+            attempts = message.get("attempts", 0)
             repository = TestResultRepository(db)
 
             result = repository.get_by_id(execution_id)
@@ -61,22 +67,35 @@ def start_worker(worker_name: str) -> None:
                     f"Execution {execution_id} "
                     f"does not exist"
                 )
-
                 ch.basic_ack(delivery_tag=method.delivery_tag)
-
                 return
 
             if result.status in {
                 "PASSED",
                 "FAILED",
+                "PROCESSING",
             }:
                 print(
                     f"Execution {execution_id} "
-                    f"already completed: "
+                    f"already handled: "
                     f"{result.status}"
                 )   
                 ch.basic_ack(delivery_tag=method.delivery_tag)
 
+                return
+
+            claimed_result = repository.claim_execution(
+                execution_id
+            )
+
+            if claimed_result is None:
+                print(
+                    f"{worker_name}: "
+                    f"Could not claim execution "
+                    f"{execution_id}"
+                )
+
+                ch.basic_ack(delivery_tag=method.delivery_tag)
                 return
             
             print(
@@ -86,9 +105,8 @@ def start_worker(worker_name: str) -> None:
             )
 
             process_test_execution(test_case_id=test_case_id, result_id=execution_id)
-
+            claimed_result.status = "PASSED"
             result.status = "PASSED"
-
             db.commit()
 
             print(
@@ -100,9 +118,7 @@ def start_worker(worker_name: str) -> None:
             
         except Exception as exc:
             db.rollback()
-
             print(f"{worker_name} Failed Job: {exc}")
-
             attempts += 1
 
             if attempts <= MAX_RETRIES:

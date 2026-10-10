@@ -17,3 +17,24 @@ class TestResultRepository:
             select(TestResult)
             .where(TestResult.test_case_id == test_case_id)
         ).scalars().all()
+
+    def claim_execution(self, execution_id: int) -> TestResult | None:
+        result = self.db.execute(
+            select(TestResult)
+            .where(
+                TestResult.id == execution_id
+            )
+            .with_for_update()
+        ).scalar_one_or_none()
+
+        if result is None:
+            return None
+
+        if result.status != "RUNNING":
+            return None
+
+        result.status = "PROCESSING"
+
+        self.db.commit()
+
+        return result
