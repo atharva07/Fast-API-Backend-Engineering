@@ -1,3 +1,4 @@
+from datetime import datetime, UTC, timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.db.models.test_result import TestResult
@@ -34,7 +35,30 @@ class TestResultRepository:
             return None
 
         result.status = "PROCESSING"
+        result.processing_started_at = datetime.now(UTC)
 
         self.db.commit()
 
         return result
+
+    def reset_stuck_execution(self, timeout_minutes: int = 10) -> list[TestResult]:
+        cutoff = datetime.now(UTC) - timedelta(minutes=timeout_minutes)
+
+        results = self.db.execute(
+            select(TestResult)
+            .where(
+                TestResult.status == "PROCESSING",
+                TestResult.processing_started_at < cutoff
+            )
+            .with_for_update(
+                skip_locked=True
+            )
+        ).scalars().all()
+
+        for result in results:
+            result.status = "RUNNING"
+            result.processing_started_at = None
+
+        self.db.commit()
+
+        return results

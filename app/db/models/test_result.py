@@ -2,6 +2,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
+from datetime import datetime
+from sqlalchemy import DateTime
 
 if TYPE_CHECKING:
     from app.db.models.test_case import TestCase
@@ -29,4 +31,9 @@ class TestResult(Base):
 
     test_case: Mapped["TestCase"] = relationship(
         back_populates="results"
+    )
+
+    processing_started_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
     )

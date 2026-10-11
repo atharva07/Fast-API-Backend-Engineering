@@ -1,5 +1,5 @@
 import pika
-
+import os
 from app.core.rabbitmq import (
     RABBITMQ_HOST,
     RABBITMQ_PORT,
@@ -11,9 +11,12 @@ from app.core.rabbitmq import (
 )
 
 def create_connection():
+    username = os.getenv("RABBITMQ_USER", "guest")
+    password = os.getenv("RABBITMQ_PASSWORD", "guest")
+
     credentials = pika.PlainCredentials(
-        username="guest",
-        password="guest"
+        username=username,
+        password=password
     )
 
     parameters = pika.ConnectionParameters(

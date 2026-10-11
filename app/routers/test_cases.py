@@ -1,6 +1,4 @@
-from fastapi import Depends, APIRouter, Response, status, BackgroundTasks
-from app.background.job import TestExecutionJob
-from app.background.queue import job_queue
+from fastapi import Depends, APIRouter, Response, status
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.models.test_case import TestCaseCreate, TestCaseResponse, TestCaseUpdate
@@ -9,8 +7,6 @@ from app.services.test_case import TestCaseService
 from app.security.authorization import require_suite_permission, require_test_case_permission
 from app.models.permission import Permission
 from app.db.models.user import User
-from app.background.rabbitmq_producer import send_test_execution
-
 
 router = APIRouter(
     prefix="/api", 
@@ -114,10 +110,5 @@ def execute_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_w
         f"Publishing execution {result.id} "
         f"to RabbitMQ"
     )
-
-    # send_test_execution(
-    #     test_case_id=test_case_id,
-    #     execution_id=result.id
-    # )
 
     return result

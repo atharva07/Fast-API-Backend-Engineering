@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
-from app.models.test_result import TestResultResponse
 from app.services.test_result import TestResultService
 
 router = APIRouter(prefix="/api", tags=["Test Results"])

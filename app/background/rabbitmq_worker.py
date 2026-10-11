@@ -107,6 +107,8 @@ def start_worker(worker_name: str) -> None:
             process_test_execution(test_case_id=test_case_id, result_id=execution_id)
             claimed_result.status = "PASSED"
             result.status = "PASSED"
+            claimed_result.processing_started_at = None
+            
             db.commit()
 
             print(

@@ -1,17 +1,11 @@
 import json
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 from app.db.models.outbox_event import OutboxEvent
 from app.db.models.test_case import TestCase
 from app.db.models.test_result import TestResult
-from app.models.test_case import Priority
-from app.repositories.test_case import TestCaseRepository
-from app.exceptions.test_case import (
-    TestCaseNotExecutableError, TestCaseNotFoundError, TestCaseAlreadyExistsError
-)
+from app.exceptions.test_case import TestCaseNotExecutableError, TestCaseNotFoundError, TestCaseAlreadyExistsError
 from app.exceptions.test_suite import TestSuiteNotFoundError
 from app.db.models.audit_log import Auditlog
-from app.repositories.audit_log import AuditLogRepository
 from app.db.unit_of_work import UnitOfWork
 
 class TestCaseService:

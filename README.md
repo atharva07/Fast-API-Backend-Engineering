@@ -212,3 +212,10 @@ PostgreSQL connection.
 
 
 ![alt text](image.png)
+
+
+# Remote Machine connection from mac to ubuntu desktop
+
+To ssh into the Ubuntu Machine use below command:
+- ssh atharva07@192.168.0.108
+- This will connect you with Ubuntu Desktop and manage the dedicated server directly from mac without even touching the machine

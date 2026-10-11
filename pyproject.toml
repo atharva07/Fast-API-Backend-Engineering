@@ -8,7 +8,17 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
-    "pika>=1.4.4",
+    "alembic==1.20.0",
+    "argon2-cffi==25.1.0",
+    "email-validator==2.3.0",
+    "fastapi==0.141.1",
+    "pika==1.4.4",
+    "psycopg[binary]==3.3.5",
+    "pwdlib==0.3.1",
+    "pydantic==2.13.5",
+    "pyjwt==2.14.0",
+    "sqlalchemy==2.0.52",
+    "uvicorn==0.52.4",
 ]
 
 [project.scripts]
@@ -17,3 +27,8 @@ fastapiqaforge = "fastapiqaforge:main"
 [build-system]
 requires = ["uv_build>=0.12.23,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.5",
+]

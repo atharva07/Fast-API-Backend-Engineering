@@ -24,7 +24,6 @@ from app.exceptions.test_result import TestResultNotFoundError
 from app.exceptions.user import UserAlreadyExistsExceptions, UserNotFoundError
 from app.exceptions.auth import InvalidCredentialsError, InvalidTokenError
 from app.exceptions.project_membership import ProjectMembershipNotFoundError, ProjectMembershipAlreadyExistsError, ProjectAccessDeniedError
-from app.background.worker import start_workers, start_visibility_monitor
 
 from app.routers.test_cases import router as test_case_router
 from app.routers.projects import router as project_router
@@ -45,10 +44,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-start_workers(2)
-
-start_visibility_monitor()
 
 """
 General Exceptions
