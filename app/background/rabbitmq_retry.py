@@ -15,7 +15,7 @@ def publish_retry(test_case_id: int, result_id: int, attempts: int) -> None:
 
         message = {
             "test_case_id": test_case_id,
-            "result_id": result_id,
+            "execution_id": result_id,
             "attempts": attempts
         }
 

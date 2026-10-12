@@ -47,6 +47,16 @@ def declare_queue(channel):
         routing_key=RABBITMQ_DLQ,
     )
 
+    # Main execution queue
+    channel.queue_declare(
+        queue=RABBITMQ_QUEUE,
+        durable=True,
+        arguments={
+            "x-dead-letter-exchange": RABBITMQ_DLX,
+            "x-dead-letter-routing-key": RABBITMQ_DLQ,
+        },
+    )
+
     # Retry Queue
     channel.queue_declare(
         queue=RABBITMQ_RETRY_QUEUE,

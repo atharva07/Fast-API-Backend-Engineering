@@ -34,5 +34,5 @@ RABBITMQ_RETRY_QUEUE = os.getenv(
 
 RABBITMQ_RETRY_ROUTING_KEY = os.getenv(
     "RABBITMQ_RETRY_ROUTING_KEY",
-    "qaforge-test-execution-tetry"
+    "qaforge-test-execution-retry"
 )

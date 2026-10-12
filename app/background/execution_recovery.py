@@ -17,9 +17,7 @@ def recover_stuck_executions() -> None:
                 execution_id=result.id
             )
 
-        print(
-            f"Requeued execution {result.id}"
-        )
+            print(f"Requeued execution {result.id}")
 
     finally:
         db.close()

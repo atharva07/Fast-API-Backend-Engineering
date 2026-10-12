@@ -96,3 +96,10 @@ Desktop.ini
 *.temp
 *.swp
 *.swo
+# Temporary migration experiments
+migration_rebuild/
+migration_transition/
+
+# Local PostgreSQL backups
+*.dump
+*.backup
