@@ -221,6 +221,5 @@ PostgreSQL connection.
     - This will connect you with Ubuntu Desktop and manage the dedicated server directly from mac without even touching the machine
     - Once you get into the server, hit the below command:
     - docker compose ps : To check the containers are running or not.
-    - 
 
 # Learn more about Database Migration

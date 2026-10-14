@@ -98,3 +98,11 @@ export async function getTestResult(
 
   return response.data
 }
+
+export async function getTestResults(): Promise<TestExecution[]> {
+  const response = await apiClient.get<TestExecution[]>(
+    '/api/results/'
+  )
+
+  return response.data
+}

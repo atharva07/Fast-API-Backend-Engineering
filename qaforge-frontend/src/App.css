@@ -334,10 +334,15 @@ body {
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  gap: 24px;
   width: 100%;
   margin: 0 0 24px;
   padding: 0;
+}
+
+.page-header .primary-button {
+  flex-shrink: 0;
 }
 
 
@@ -1546,4 +1551,31 @@ textarea:focus-visible {
   color: #94a3b8;
 
   font-size: 12px;
+}
+
+/* =========================================================
+   EXECUTION RESULTS
+========================================================= */
+.result-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.result-status.passed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.result-status.failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.result-status.running {
+  background: #fef3c7;
+  color: #92400e;
 }
