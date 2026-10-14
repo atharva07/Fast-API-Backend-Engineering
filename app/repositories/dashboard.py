@@ -25,11 +25,7 @@ class DashboardRepository:
 
         return self.db.execute(query).scalar_one()
 
-    def count_test_suites(
-        self,
-        user_id: int,
-        is_admin: bool
-    ) -> int:
+    def count_test_suites(self, user_id: int, is_admin: bool) -> int:
         query = select(func.count(TestSuite.id))
 
         if not is_admin:
@@ -44,11 +40,7 @@ class DashboardRepository:
 
         return self.db.execute(query).scalar_one()
 
-    def count_test_cases(
-        self,
-        user_id: int,
-        is_admin: bool
-    ) -> int:
+    def count_test_cases(self, user_id: int, is_admin: bool) -> int:
         query = (
             select(func.count(TestCase.id))
             .join(
@@ -69,11 +61,7 @@ class DashboardRepository:
 
         return self.db.execute(query).scalar_one()
 
-    def count_executions(
-        self,
-        user_id: int,
-        is_admin: bool
-    ) -> int:
+    def count_executions(self, user_id: int, is_admin: bool) -> int:
         query = (
             select(func.count(TestResult.id))
             .join(
