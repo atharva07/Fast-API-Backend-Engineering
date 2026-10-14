@@ -7,6 +7,7 @@ from app.repositories.test_result import TestResultRepository
 from app.repositories.user import UserRepository
 from app.repositories.project_membership import ProjectMembeshipRepository
 from app.repositories.outbox_event import OutboxEventRepository
+from app.repositories.dashboard import DashboardRepository
 
 class UnitOfWork:
     def __init__(self, db: Session):
@@ -19,6 +20,7 @@ class UnitOfWork:
         self.users = UserRepository(db)
         self.project_memberships = ProjectMembeshipRepository(db)
         self.outbox_events = OutboxEventRepository(db)
+        self.dashboard = DashboardRepository(db)
 
     def __enter__(self):
         return self
