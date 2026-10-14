@@ -24,3 +24,7 @@ class TestResultService:
                 raise TestResultNotFoundError("Test Result Not Found")
 
             return result
+
+    def get_all_results(self) -> list[TestResult]:
+        with self.uow:
+            return self.uow.test_results.get_all()

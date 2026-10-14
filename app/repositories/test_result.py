@@ -7,6 +7,12 @@ class TestResultRepository:
     def __init__(self, db: Session):
         self.db = db
 
+    def get_all(self) -> list[TestResult]:
+        return self.db.execute(
+            select(TestResult)
+            .order_by(TestResult.id.desc())
+        ).scalars().all()
+
     def get_by_id(self, result_id: int) -> TestResult | None:
         return self.db.execute(
             select(TestResult)

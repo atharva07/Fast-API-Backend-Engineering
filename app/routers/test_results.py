@@ -22,3 +22,12 @@ def get_result(result_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestResultService(uow)
 
     return service.get_results(result_id)
+
+"""
+    GET Request - All Test Results across all test cases
+"""
+@router.get("/results")
+def get_all_results(uow: UnitOfWork = Depends(get_unit_of_work)):
+    service = TestResultService(uow)
+
+    return service.get_all_results()
