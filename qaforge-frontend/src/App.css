@@ -214,22 +214,62 @@ body {
   font-weight: 500;
 }
 
+.user button {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  padding: 7px 13px;
+  border-radius: 7px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.user button:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.user button:active {
+  background: #f1f5f9;
+  transform: translateY(1px);
+}
+
+.user > span:first-child {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+}
 
 /* Avatar */
 
 .avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 50%;
+
   background: #0f172a;
   color: #ffffff;
+
   font-size: 14px;
-  font-weight: 700;
-  box-shadow:
-    0 2px 5px rgba(15, 23, 42, 0.15);
+  font-weight: 600;
+
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
 
@@ -470,21 +510,28 @@ body {
 
 .project-filter {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 14px;
+
   width: 100%;
-  margin-bottom: 18px;
+  margin: 0 0 24px;
 }
 
 
 /* Filter label */
 
 .project-filter label {
-  color: #64748b;
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #475569;
+
   font-size: 12px;
   font-weight: 600;
-  line-height: 1;
+
+  line-height: 1.2;
   letter-spacing: 0.2px;
 }
 
@@ -1578,4 +1625,346 @@ textarea:focus-visible {
 .result-status.running {
   background: #fef3c7;
   color: #92400e;
+}
+
+/* =========================================================
+   EXECUTIONS PAGE
+========================================================= */
+
+.executions-page {
+  width: 100%;
+  padding: 32px;
+}
+
+
+/* =========================================================
+   EXECUTIONS TABLE
+========================================================= */
+
+.executions-page .project-table-container {
+  width: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.executions-page .project-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+
+/* Column widths */
+
+.executions-page .project-table th:nth-child(1),
+.executions-page .project-table td:nth-child(1) {
+  width: 30%;
+}
+
+.executions-page .project-table th:nth-child(2),
+.executions-page .project-table td:nth-child(2) {
+  width: 35%;
+}
+
+.executions-page .project-table th:nth-child(3),
+.executions-page .project-table td:nth-child(3) {
+  width: 35%;
+}
+
+
+/* Header */
+
+.executions-page .project-table th {
+  padding: 14px 22px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+
+/* Body */
+
+.executions-page .project-table td {
+  padding: 17px 22px;
+  font-size: 14px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+
+/* Result ID */
+
+.executions-page .project-table td:first-child {
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* Test case ID */
+
+.executions-page .project-table td:nth-child(2) {
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* Status */
+
+.executions-page .project-table td:nth-child(3) {
+  color: #475569;
+}
+
+
+/* Row hover */
+
+.executions-page .project-table tbody tr {
+  transition:
+    background 0.15s ease;
+}
+
+.executions-page .project-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+
+/* =========================================================
+   EXECUTIONS PAGINATION
+========================================================= */
+
+.executions-page .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 72px;
+  padding: 16px 20px;
+
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+
+/* Previous / Next / First / Last */
+
+.executions-page .pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+  min-width: 72px;
+  padding: 0 12px;
+
+  border: 1px solid #dbe1e8;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.executions-page .pagination-button:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+
+.executions-page .pagination-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+
+.executions-page .pagination-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #f8fafc;
+}
+
+
+/* =========================================================
+   PAGE NUMBER BUTTONS
+========================================================= */
+
+.executions-page .pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 4px;
+}
+
+
+.executions-page .pagination-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #64748b;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+.executions-page .pagination-page:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+
+.executions-page .pagination-page.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+
+.executions-page .pagination-page.active:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   EXECUTIONS PAGE RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .executions-page {
+    padding: 20px;
+  }
+
+  .executions-page .project-table-container {
+    overflow-x: auto;
+  }
+
+  .executions-page .project-table {
+    min-width: 650px;
+  }
+
+  .executions-page .pagination {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+}
+
+/* =========================================================
+   PAGE FILTERS
+========================================================= */
+
+.test-suites-page select,
+.test-cases-page select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  height: 40px;
+  min-width: 240px;
+
+  padding: 0 40px 0 13px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  background-color: #ffffff;
+
+  color: #334155;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  outline: none;
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+.test-suites-page select:hover,
+.test-cases-page select:hover {
+  border-color: #94a3b8;
+}
+
+
+.test-suites-page select:focus,
+.test-cases-page select:focus {
+  border-color: #64748b;
+
+  box-shadow:
+    0 0 0 3px rgba(100, 116, 139, 0.12);
+}
+
+/* =========================================================
+   CUSTOM SELECT WRAPPER
+========================================================= */
+
+.test-suites-page .project-filter,
+.test-cases-page .project-filter {
+  position: relative;
+}
+
+
+.test-suites-page .project-filter::after,
+.test-cases-page .project-filter::after {
+  content: "⌄";
+
+  position: absolute;
+  right: 13px;
+  top: 50%;
+
+  transform: translateY(-55%);
+
+  color: #64748b;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  pointer-events: none;
 }

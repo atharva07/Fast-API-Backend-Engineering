@@ -29,11 +29,13 @@ class TestResult(Base):
         nullable=False
     )
 
-    test_case: Mapped["TestCase"] = relationship(
-        back_populates="results"
-    )
-
     processing_started_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True,
     )
+
+    test_case: Mapped["TestCase"] = relationship(
+        back_populates="results"
+    )
+
+    

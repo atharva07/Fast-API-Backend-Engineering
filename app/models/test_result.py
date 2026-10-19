@@ -6,3 +6,10 @@ class TestResultResponse(BaseModel):
     id: int
     test_case_id: int
     status: str
+
+class PaginatedTestResultRespones(BaseModel):
+    items: list[TestResultResponse]
+    page: int
+    page_size: int
+    total: int
+    total_pages: int

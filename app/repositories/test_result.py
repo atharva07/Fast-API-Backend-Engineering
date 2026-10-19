@@ -1,5 +1,5 @@
 from datetime import datetime, UTC, timedelta
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from app.db.models.test_result import TestResult
 
@@ -24,6 +24,19 @@ class TestResultRepository:
             select(TestResult)
             .where(TestResult.test_case_id == test_case_id)
         ).scalars().all()
+
+    def get_page(self, offset: int, limit: int) -> list[TestResult]:
+        return self.db.execute(
+            select(TestResult)
+            .order_by(TestResult.id.desc())
+            .offset(offset)
+            .limit(limit)
+        ).scalars().all()
+
+    def count_all(self) -> int:
+        return self.db.execute(
+            select(func.count(TestResult.id))
+        ).scalar_one()
 
     def claim_execution(self, execution_id: int) -> TestResult | None:
         result = self.db.execute(

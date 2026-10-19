@@ -200,11 +200,8 @@ return (
 
 
     {/* Projects Table */}
-
     <div className="project-table-container">
-
         <table className="project-table">
-
         <thead>
             <tr>
             <th>ID</th>
@@ -214,13 +211,9 @@ return (
             <th>Actions</th>
             </tr>
         </thead>
-
         <tbody>
-
             {projects.map((project) => (
-
             <tr key={project.id}>
-
                 <td>
                 {project.id}
                 </td>
@@ -238,24 +231,19 @@ return (
                 <td>
                 {project.execution_timeout} ms
                 </td>
-
                 <td>
-
                 <button
                     onClick={() => {
                         setEditingProject(project)
-
                         setName(project.name)
                         setDescription(project.description || '')
                         setExecutionTimeout(project.execution_timeout)
-
                         setCreateError(null)
                         setShowCreateModal(true)
                     }}
                 >
                     Edit
                 </button>
-
                 <button
                     onClick={() => handleDeleteProject(project)}
                     disabled={deletingProjectId === project.id}
@@ -264,41 +252,27 @@ return (
                         ? 'Deleting...'
                         : 'Delete'}
                 </button>
-
                 </td>
-
             </tr>
-
             ))}
-
         </tbody>
-
         </table>
-
-
         {projects.length === 0 && (
         <p className="empty-state">
             No projects found.
         </p>
         )}
-
     </div>
 
 
     {/* Create Project Modal */}
-
     {showCreateModal && (
-
         <div className="modal-overlay">
-
         <div className="modal">
-
             <div className="modal-header">
-
             <h2>
                 {editingProject ? 'Edit Project' : 'Create Project'}
             </h2>
-
             <button
                 type="button"
                 onClick={() => {
@@ -308,10 +282,7 @@ return (
             >
                 ×
             </button>
-
             </div>
-
-
             <form
                 onSubmit={
                     editingProject
@@ -319,15 +290,11 @@ return (
                     : handleCreateProject
                 }
             >
-
             {/* Name */}
-
             <div className="form-group">
-
                 <label>
                 Name
                 </label>
-
                 <input
                 type="text"
                 value={name}
@@ -336,12 +303,8 @@ return (
                 }
                 required
                 />
-
             </div>
-
-
             {/* Description */}
-
             <div className="form-group">
 
                 <label>

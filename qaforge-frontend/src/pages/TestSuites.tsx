@@ -244,38 +244,35 @@ function TestSuites() {
 
       {/* Project Selector */}
 
-      <div className="form-group">
+      <div className="project-filter">
+        <div className="filter-field">
+          <label>
+            Project
+          </label>
 
-        <label>
-          Project
-        </label>
-
-        <select
-          value={selectedProjectId ?? ''}
-          onChange={(event) =>
-            setSelectedProjectId(
-              Number(event.target.value)
-            )
-          }
-        >
-
-          <option value="" disabled>
-            Select a project
-          </option>
-
-          {projects.map((project) => (
-            <option
-              key={project.id}
-              value={project.id}
-            >
-              {project.name}
+          <select
+            value={selectedProjectId ?? ''}
+            onChange={(event) =>
+              setSelectedProjectId(
+                Number(event.target.value)
+              )
+            }
+          >
+            <option value="" disabled>
+              Select a project
             </option>
-          ))}
 
-        </select>
-
+            {projects.map((project) => (
+              <option
+                key={project.id}
+                value={project.id}
+              >
+                {project.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
-
 
       {/* Loading Suites */}
 

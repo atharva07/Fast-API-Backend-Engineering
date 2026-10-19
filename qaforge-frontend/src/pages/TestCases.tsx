@@ -328,86 +328,77 @@ function TestCases() {
 
       {/* Project Selector */}
 
-      <div className="form-group">
+      <div className="project-filter">
+        <div className="filter-field">
+          <label>
+            Project
+          </label>
 
-        <label>
-          Project
-        </label>
+          <select
+            value={selectedProjectId ?? ''}
+            onChange={(event) => {
+              const projectId = Number(event.target.value)
 
-        <select
-          value={selectedProjectId ?? ''}
-          onChange={(event) => {
-            const projectId = Number(event.target.value)
+              setSelectedProjectId(projectId)
 
-            setSelectedProjectId(projectId)
-
-            // Clear dependent selections
-            setSelectedSuiteId(null)
-            setTestSuites([])
-            setTestCases([])
-          }}
-        >
-
-          <option value="" disabled>
-            Select a project
-          </option>
-
-          {projects.map((project) => (
-
-            <option
-              key={project.id}
-              value={project.id}
-            >
-              {project.name}
+              // Clear dependent selections
+              setSelectedSuiteId(null)
+              setTestSuites([])
+              setTestCases([])
+            }}
+          >
+            <option value="" disabled>
+              Select a project
             </option>
 
-          ))}
-
-        </select>
-
+            {projects.map((project) => (
+              <option
+                key={project.id}
+                value={project.id}
+              >
+                {project.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
-
 
       {/* Suite Selector */}
 
-      <div className="form-group">
+      <div className="project-filter">
+        <div className="filter-field">
+          <label>
+            Test Suite
+          </label>
 
-        <label>
-          Test Suite
-        </label>
-
-        <select
-          value={selectedSuiteId ?? ''}
-          onChange={(event) => {
-            setSelectedSuiteId(
-              Number(event.target.value)
-            )
-          }}
-          disabled={
-            loadingSuites ||
-            testSuites.length === 0
-          }
-        >
-
-          <option value="" disabled>
-            {loadingSuites
-              ? 'Loading suites...'
-              : 'Select a test suite'}
-          </option>
-
-          {testSuites.map((suite) => (
-
-            <option
-              key={suite.id}
-              value={suite.id}
-            >
-              {suite.name}
+          <select
+            value={selectedSuiteId ?? ''}
+            onChange={(event) => {
+              setSelectedSuiteId(
+                Number(event.target.value)
+              )
+            }}
+            disabled={
+              loadingSuites ||
+              testSuites.length === 0
+            }
+          >
+            <option value="" disabled>
+              {loadingSuites
+                ? 'Loading suites...'
+                : 'Select a test suite'}
             </option>
 
-          ))}
-
-        </select>
-
+            {testSuites.map((suite) => (
+              <option
+                key={suite.id}
+                value={suite.id}
+              >
+                {suite.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
 

@@ -223,3 +223,73 @@ PostgreSQL connection.
     - docker compose ps : To check the containers are running or not.
 
 # Learn more about Database Migration
+
+# Git based Ubuntu Server Depoloyment
+
+    Step 1 - Make the changes on your mac
+        Open Terminal one your mac
+        - cd ~/fastApiQAForge
+        - git status -sb
+    
+    Step 2 - Run the tests 
+        - PYTHONPATH=. uv run pytest -q
+
+    Step 3 - Frontend build (if you make the changes in the frontend)
+        - cd qaforge-frontend
+        - npm run build
+        - cd ..
+        
+        - Proceed when tests passed
+
+    Step 4 - Commit and push to github -> From ~/fastApiQAForge:
+        - git status
+        - git add .
+        - git commit -m "Describe your changes"
+        - git push origin main
+
+    Step 5 - Connect to Ubuntu and fetch the changes
+        - ssh atharva07@192.168.0.108
+
+    Step 6 - Then on Ubuntu
+        - cd ~/qaforge-repo
+        - git status -sb
+
+    Important: this checkout has a local modification to docker-compose.yml. It points to your existing environment file at /home/atharva07/qaforge/.env.
+    Do not discard or commit that server-specific change. If Git reports that the local modification would be overwritten, stop and preserve it before pulling.
+    If the checkout is clean apart from that known configuration change and Git permits the fast-forward update, run:
+
+    Step 7 - git pull --ff-only origin main
+
+    Step 8 - Build the new Docker images
+
+        docker compose \
+            -p qaforge \
+            --env-file ~/qaforge/.env \
+            -f ~/qaforge-repo/docker-compose.yml \
+            build api worker-1 worker-2 outbox-publisher execution-recovery frontend
+
+    Wait for all six images to finish building successfully.
+    If a build fails, don't proceed to deployment until you've understood and resolved the error.
+
+    Step 9 - Deploy the updated services
+
+        docker compose \
+            -p qaforge \
+            --env-file ~/qaforge/.env \
+            -f ~/qaforge-repo/docker-compose.yml \
+            up -d --no-deps \
+            api worker-1 worker-2 outbox-publisher execution-recovery frontend
+
+    Step 10 - Verify the deployment
+        Run on Ubuntu
+        
+        docker compose \
+            -p qaforge \
+            --env-file ~/qaforge/.env \
+            -f ~/qaforge-repo/docker-compose.yml \
+            ps
+
+        Then
+
+        curl -I --max-time 10 http://localhost/
+        curl -I --max-time 10 http://localhost:8000/docs
