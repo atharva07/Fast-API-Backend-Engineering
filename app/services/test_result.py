@@ -1,5 +1,5 @@
 import math
-from app.models.test_result import PaginatedTestResultRespones
+from app.models.test_result import PaginatedTestResultResponse, TestResultStatus
 from app.db.unit_of_work import UnitOfWork
 from app.db.models.test_result import TestResult
 from app.exceptions.test_result import TestResultNotFoundError
@@ -27,17 +27,15 @@ class TestResultService:
 
             return result
 
-    def get_results_page(self, page: int, page_size: int) -> PaginatedTestResultRespones:
+    def get_results_page(self, page: int, page_size: int, status: TestResultStatus | None = None, test_case_id: int | None = None) -> PaginatedTestResultResponse:
         offset = (page - 1) * page_size
 
         with self.uow:
-            results = self.uow.test_results.get_page(offset=offset, limit=page_size)
-
-            total = self.uow.test_results.count_all()
-
+            results = self.uow.test_results.get_page(offset=offset, limit=page_size, status=status, test_case_id=test_case_id)
+            total = self.uow.test_results.count_all(status=status, test_case_id=test_case_id)
             total_pages = math.ceil(total / page_size)
 
-            return PaginatedTestResultRespones(
+            return PaginatedTestResultResponse(
                 items=results,
                 page=page,
                 page_size=page_size,

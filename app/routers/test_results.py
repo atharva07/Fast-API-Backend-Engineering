@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.services.test_result import TestResultService
-from app.models.test_result import PaginatedTestResultRespones
+from app.models.test_result import PaginatedTestResultResponse, TestResultStatus
 
 router = APIRouter(prefix="/api", tags=["Test Results"])
 
@@ -36,11 +36,18 @@ def get_result(result_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
 """
     Implementing pagination
 """
-@router.get("/results", response_model=PaginatedTestResultRespones)
-def get_paginated_results(page: int = Query(default=1, ge=1), page_size: int = Query(default=10, ge=1,le=100), uow: UnitOfWork = Depends(get_unit_of_work)):
+@router.get("/results", response_model=PaginatedTestResultResponse)
+def get_paginated_results(
+    page: int = Query(default=1, ge=1), 
+    page_size: int = Query(default=10, ge=1,le=100), 
+    status: TestResultStatus | None = Query(default=None),
+    test_case_id: int = Query(default=None, ge=1),
+    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestResultService(uow)
 
     return service.get_results_page(
         page = page,
-        page_size = page_size
+        page_size = page_size,
+        status=status,
+        test_case_id=test_case_id
     )

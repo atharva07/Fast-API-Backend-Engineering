@@ -326,15 +326,19 @@ function TestCases() {
       </div>
 
 
-      {/* Project Selector */}
+      {/* Test Case Filters */}
 
-      <div className="project-filter">
+      <div className="test-case-filters">
+
+        {/* Project */}
+
         <div className="filter-field">
-          <label>
+          <label htmlFor="project-select">
             Project
           </label>
 
           <select
+            id="project-select"
             value={selectedProjectId ?? ''}
             onChange={(event) => {
               const projectId = Number(event.target.value)
@@ -361,17 +365,17 @@ function TestCases() {
             ))}
           </select>
         </div>
-      </div>
 
-      {/* Suite Selector */}
 
-      <div className="project-filter">
+        {/* Test Suite */}
+
         <div className="filter-field">
-          <label>
+          <label htmlFor="suite-select">
             Test Suite
           </label>
 
           <select
+            id="suite-select"
             value={selectedSuiteId ?? ''}
             onChange={(event) => {
               setSelectedSuiteId(
@@ -399,6 +403,7 @@ function TestCases() {
             ))}
           </select>
         </div>
+
       </div>
 
 

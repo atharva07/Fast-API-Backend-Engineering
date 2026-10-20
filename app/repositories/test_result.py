@@ -2,6 +2,7 @@ from datetime import datetime, UTC, timedelta
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from app.db.models.test_result import TestResult
+from app.models.test_result import TestResultStatus
 
 class TestResultRepository:
     def __init__(self, db: Session):
@@ -25,19 +26,51 @@ class TestResultRepository:
             .where(TestResult.test_case_id == test_case_id)
         ).scalars().all()
 
-    def get_page(self, offset: int, limit: int) -> list[TestResult]:
-        return self.db.execute(
+    """
+        We have applied filtering and pagination on the endpoint. 
+        So before pagination comes filtering. Once the filtering is done, pagination is applied on that output
+    """
+    def get_page(self, offset: int, limit: int, status: TestResultStatus | None = None, test_case_id: int | None = None) -> list[TestResult]:
+        query = (
             select(TestResult)
             .order_by(TestResult.id.desc())
+        )
+
+        if status is not None:
+            query = query.where(
+                TestResult.status == status
+            )
+
+        if test_case_id is not None:
+            query = query.where(
+                TestResult.test_case_id == test_case_id
+            )
+
+        query = (
+            query
             .offset(offset)
             .limit(limit)
-        ).scalars().all()
+        )
 
-    def count_all(self) -> int:
-        return self.db.execute(
-            select(func.count(TestResult.id))
-        ).scalar_one()
+        return self.db.execute(query).scalars().all()
 
+    def count_all(self, status: TestResultStatus | None = None, test_case_id: int | None = None) -> int:
+        query = select(
+            func.count(TestResult.id)
+        )
+
+        if status is not None:
+            query = query.where(
+                TestResult.status == status
+            )
+
+        if test_case_id is not None:
+            query = query.where(
+                TestResult.test_case_id == test_case_id
+            )
+
+        return self.db.execute(query).scalar_one()
+        
     def claim_execution(self, execution_id: int) -> TestResult | None:
         result = self.db.execute(
             select(TestResult)

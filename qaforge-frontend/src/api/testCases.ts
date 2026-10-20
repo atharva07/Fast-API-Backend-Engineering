@@ -99,14 +99,6 @@ export async function getTestResult(
   return response.data
 }
 
-// export async function getTestResults(): Promise<TestExecution[]> {
-//   const response = await apiClient.get<TestExecution[]>(
-//     '/api/results/'
-//   )
-
-//   return response.data
-// }
-
 export interface PaginatedTestResults {
   items: TestExecution[]
   page: number
@@ -117,7 +109,9 @@ export interface PaginatedTestResults {
 
 export async function getTestResults(
   page: number,
-  pageSize: number
+  pageSize: number,
+  testCaseId?: number,
+  status?: string
 ): Promise<PaginatedTestResults> {
   const response = await apiClient.get<PaginatedTestResults>(
     '/api/results',
@@ -125,6 +119,8 @@ export async function getTestResults(
       params: {
         page,
         page_size: pageSize,
+        test_case_id: testCaseId,
+        status: status,
       },
     }
   )

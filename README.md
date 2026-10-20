@@ -262,7 +262,13 @@ PostgreSQL connection.
 
     Step 8 - Build the new Docker images
 
-        docker compose \
+        tmp_docker_config="$(mktemp -d)"
+        trap 'rm -rf "$tmp_docker_config"' EXIT
+        printf '{ "auths": {} }\n' > "$tmp_docker_config/config.json"
+
+        DOCKER_CONFIG="$tmp_docker_config" \
+        docker --host unix:///home/atharva07/.docker/desktop/docker.sock \
+        compose \
             -p qaforge \
             --env-file ~/qaforge/.env \
             -f ~/qaforge-repo/docker-compose.yml \
@@ -270,7 +276,7 @@ PostgreSQL connection.
 
     Wait for all six images to finish building successfully.
     If a build fails, don't proceed to deployment until you've understood and resolved the error.
-
+    
     Step 9 - Deploy the updated services
 
         docker compose \
