@@ -143,15 +143,15 @@ Current Database looks like below conceptually
                     └── GET    /api/test-cases/{id}/audit-logs
 
 
-Passwords for Testing
+# Passwords for Testing
 
-Atharva             atharva123                  atharva@gmail.com
-Rahul               rahul123                    rahul123@gmail.com
-Priya               priya123                    priya123@gmail.com
-Tony Stark          temporary123                tony@example.com
-Point Break         PointBreak123               pointBreak@avengers.com
-Captain America     CaptainAmerica123           captainRodgers@avengers.com
-Peter Parket        peterParker@avengers.com    PeterParket123
+    - Atharva             atharva123                  atharva@gmail.com
+    - Rahul               rahul123                    rahul123@gmail.com
+    - Priya               priya123                    priya123@gmail.com
+    - Tony Stark          temporary123                tony@example.com
+    - Point Break         PointBreak123               pointBreak@avengers.com
+    - Captain America     CaptainAmerica123           captainRodgers@avengers.com
+    - Peter Parket        peterParker@avengers.com    PeterParket123
 
 # Running tests
 
