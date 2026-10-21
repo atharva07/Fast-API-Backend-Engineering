@@ -150,7 +150,7 @@ Rahul               rahul123                    rahul123@gmail.com
 Priya               priya123                    priya123@gmail.com
 Tony Stark          temporary123                tony@example.com
 Point Break         PointBreak123               pointBreak@avengers.com
-Captain America     CaptainAmerica123           captainRodgers@avengers.com 
+Captain America     CaptainAmerica123           captainRodgers@avengers.com
 Peter Parket        peterParker@avengers.com    PeterParket123
 
 # Running tests
@@ -276,7 +276,7 @@ PostgreSQL connection.
 
     Wait for all six images to finish building successfully.
     If a build fails, don't proceed to deployment until you've understood and resolved the error.
-    
+
     Step 9 - Deploy the updated services
 
         docker compose \
@@ -299,3 +299,18 @@ PostgreSQL connection.
 
         curl -I --max-time 10 http://localhost/
         curl -I --max-time 10 http://localhost:8000/docs
+
+
+# How Docker Image build workflow looks
+
+![alt text](image-1.png)
+
+
+# Notes:
+
+    - The browser your Ubuntu server through a published port, while Nginx reached fast API through Internal Docker network. Those two are different newtwork paths.
+
+
+# QAForge Docker setup from end to end
+
+![alt text](image-2.png)
