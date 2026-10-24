@@ -4,6 +4,7 @@ from app.db.unit_of_work import UnitOfWork
 from app.exceptions.project import ProjectAlreadyExistsError, ProjectNotFoundError
 from app.db.models.user import User
 from app.models.role import UserRole
+from app.cache.dashboard import invalidate_all_dashboards, invalidate_dashboard
 
 class ProjectService:
     def __init__(self,uow: UnitOfWork):
@@ -122,3 +123,6 @@ class ProjectService:
             self.uow.projects.delete(project)
 
             self.uow.commit()
+
+        # Invalidate cache only after successfull commit
+        invalidate_all_dashboards()

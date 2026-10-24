@@ -309,8 +309,49 @@ PostgreSQL connection.
 # Notes:
 
     - The browser your Ubuntu server through a published port, while Nginx reached fast API through Internal Docker network. Those two are different newtwork paths.
+    - How to read IP addresses and ports
+        - 0.0.0.0:8000->8000/tcp
+        - 0.0.0.0 -> Docker published the port on all IPv4 network interfaces of the host
+        - First 8000 -> The host-published port
+        - Second 8000 -> The destination port inside the container
+    
+    - Why we can use api:8000 without publishing port 8000 ?
+        - That works because the frontend and API share the qaforge_default Docker network. They communicate using the service name api and container port 8000
+    - Container-to-Container traffic on shared network does not require publishing the API port to the host.
+    - Port publishing is for connections entering through the host's network interfaces. Internal container communication uses docker networks directly.
+    
+    - What is uvicorn ?
+        - 
 
+    - What actually makes a port reachable ?
+        - There are three separate things to understand ?
+        - Application listening: Uvicorn must listen on correct address and port
+        - Container networking: Docker must allow the source to reach that container
+        - Port Publishing: Docker exposes the host-side port and forwards traffic to the container port
 
+    - What is DNS ?
+        - DNS Stands for Domain Name System. Its job is to transalte a hostname into IP Address so a client can find the destination
+        - In our project, The frontend uses api, rather than hard-coding 172.18.0.7, because container IP can change when containers are recreated.
+
+        - Server:    127.0.0.11
+        - Address:   127.0.0.11:53
+
+        - Name:      api
+        - Address:   172.18.0.7
+
+        - Here's how to read it:
+            - 127.0.0.11 = DNS resolver
+            - api = hostname
+            - 172.18.0.7 = resolved IP (this can change if the container restared or built again)
+        - DNS resolves the hostname, not the port
+        
 # QAForge Docker setup from end to end
 
 ![alt text](image-2.png)
+
+# Docker Host-Published Ports vs Container Ports
+
+![alt text](image-3.png)
+
+
+![alt text](image-4.png)
