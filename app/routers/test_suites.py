@@ -68,8 +68,10 @@ def replace_suite(suite_id: int, suite: TestSuiteCreate, current_user: User = De
     PATCH Request
 """
 @router.patch("/suites/{suite_id}", response_model=TestSuiteResponse)
-def update_suite(suite_id: int, suite: TestSuiteUpdate, current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_UPDATE)),
-                uow: UnitOfWork = Depends(get_unit_of_work)):
+def update_suite(suite_id: int, 
+            suite: TestSuiteUpdate, 
+            current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_UPDATE)),
+            uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     return service.update_suite(
@@ -82,8 +84,9 @@ def update_suite(suite_id: int, suite: TestSuiteUpdate, current_user: User = Dep
     DELETE Request
 """
 @router.delete("/suites/{suite_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_suite(suite_id: int, current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_DELETE)), 
-                uow: UnitOfWork = Depends(get_unit_of_work)):
+def delete_suite(suite_id: int,
+            current_user: User = Depends(require_suite_permission(Permission.TEST_SUITE_DELETE)), 
+            uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestSuiteService(uow)
 
     service.delete_suite(suite_id)

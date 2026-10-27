@@ -355,3 +355,7 @@ PostgreSQL connection.
 
 
 ![alt text](image-4.png)
+
+# Implementing Session based login using Redis
+
+![alt text](image-5.png)

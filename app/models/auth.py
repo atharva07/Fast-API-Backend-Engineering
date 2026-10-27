@@ -4,6 +4,9 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=3)
 
+# class LoginResponse(BaseModel):
+#     access_token: str
+#     token_type: str 
+
 class LoginResponse(BaseModel):
-    access_token: str
-    token_type: str 
+    message: str
