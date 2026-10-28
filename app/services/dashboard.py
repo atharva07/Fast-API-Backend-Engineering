@@ -10,9 +10,9 @@ class DashboardService:
     def get_dashboard(
         self,
         user_id: int,
-        user_role: str, 
+        user_role: str,
     ) -> DashboardResponse:
-        cache_key = f"Dashboard: {user_id}"
+        cache_key = f"dashboard:{user_id}"
 
         cached_dashboard = get(cache_key)
 

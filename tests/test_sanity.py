@@ -1,7 +1,5 @@
 from types import SimpleNamespace
-
 import pytest
-
 from app.exceptions.auth import InvalidTokenError
 from app.exceptions.project import ProjectNotFoundError
 from app.exceptions.project_membership import ProjectAccessDeniedError
@@ -14,7 +12,6 @@ from app.security.jwt import create_access_token, decode_access_token
 from app.security.password import hash_password, verify_password
 from app.security.permissions import ROLE_PERMISSIONS
 from app.services.project import ProjectService
-
 
 class FakeProjectRepository:
     def __init__(self, project=None):

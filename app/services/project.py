@@ -28,7 +28,10 @@ class ProjectService:
                     raise ProjectAlreadyExistsError("A Project with this name already Exists")
                 raise
 
-            return project
+        # Invalidate dashboard cache only after a successful commit
+        invalidate_all_dashboards()
+
+        return project
 
     """
         This is a GET Request
@@ -81,7 +84,10 @@ class ProjectService:
                     raise ProjectAlreadyExistsError("A Project with this name already exists")
                 raise
 
-            return project
+        # Invalidate dashboard cache only after a successful commit
+        invalidate_all_dashboards()
+
+        return project
 
     """
         This is a PATCH Request
@@ -108,7 +114,10 @@ class ProjectService:
                     raise ProjectAlreadyExistsError("A Project with this name already exists")
                 raise
 
-            return project
+        # Invalidate dashboard cache only after a successful commit
+        invalidate_all_dashboards()
+
+        return project
 
     """
         This is a DELETE Request
