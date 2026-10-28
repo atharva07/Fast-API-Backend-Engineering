@@ -359,3 +359,29 @@ PostgreSQL connection.
 # Implementing Session based login using Redis
 
 ![alt text](image-5.png)
+
+# How Axios and Session Authentication work
+
+![alt text](image-6.png)
+
+![alt text](image-7.png)
+
+# Understanding CORS and Preflight requests
+    - CORS: Cross-Origin Resource Sharing
+    - This is an important backend engineering concept as it explains why an API can work in Postman but fail in a Browser
+    - It is a browser security mechanism that controls whether a web page is allowed to read response from a server at different origin
+    - In this project:
+        - Frontend: http://localhost - port 80
+        - Backend: http://localhost:8000 - port 8000
+    - Although both use localhost, but they have different origin because of their ports differ.
+    - An origin consists of three parts:
+        - scheme + hostname + port
+        - Ex: URL = http://localhost -> Origin = http://localhost:80
+    - It primarily tells browser which origins allowed to access responses.
+    - Postman don't enforce CORS rules
+
+    - What is Preflight Request ?
+    - A preflight request is an automatic OPTIONS requests that a broweser sends to check if the cross-origin request is permitted before sending the actual request
+    - Think of it as asking permission before proceeding
+
+![alt text](image-8.png)

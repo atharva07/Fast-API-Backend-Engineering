@@ -1,10 +1,11 @@
 import os
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, Request
 from app.db.dependencies import get_unit_of_work
 from app.db.unit_of_work import UnitOfWork
 from app.models.auth import LoginRequest, LoginResponse
 from app.services.auth import AuthService
 from app.services.session import SessionServices
+from app.security.dependencies import get_current_user
 
 router = APIRouter(
     prefix="/api/auth",
@@ -22,7 +23,11 @@ COOKIE_SECURE = (
 )
 
 @router.post("/login", response_model=LoginResponse)
-def login(requests: LoginRequest, response: Response, uow: UnitOfWork = Depends(get_unit_of_work)):
+def login(
+    requests: LoginRequest, 
+    response: Response, 
+    uow: UnitOfWork = Depends(get_unit_of_work)
+):
     service = AuthService(uow)
 
     user_id = service.authenticate(email=requests.email, password=requests.password)
@@ -42,3 +47,31 @@ def login(requests: LoginRequest, response: Response, uow: UnitOfWork = Depends(
     )
 
     return LoginResponse(message="Login Successful")
+
+@router.get("/me")
+def get_me(current_user = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "user_role": current_user.user_role
+    }
+
+@router.post("/logout")
+def logout(
+    request: Request,
+    response: Response
+):
+    session_id = request.cookies.get(SESSION_COOKIE)
+
+    if session_id:
+        session.delete_session(session_id)
+
+    response.delete_cookie(
+        key = SESSION_COOKIE,
+        path = "/",
+        httponly = True,
+        secure = COOKIE_SECURE,
+        samesite = "lax"
+    )
+
+    return {"message": "Logged out Successfully"}

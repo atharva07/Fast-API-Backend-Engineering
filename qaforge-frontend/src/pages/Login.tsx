@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { login } from '../api/auth'
@@ -19,16 +20,13 @@ function Login() {
     setLoading(true)
 
     try {
-      const response = await login({
+      await login({
         email,
         password,
       })
 
-      sessionStorage.setItem(
-        'access_token',
-        response.access_token
-      )
-
+      // The browser handles the session cookie.
+      // No JWT needs to be stored in sessionStorage.
       navigate('/dashboard')
     } catch (error) {
       setError('Invalid email or password')
@@ -39,38 +37,30 @@ function Login() {
 
   return (
     <main className="login-page">
-
       <div className="login-card">
-
         {/* Brand */}
         <div className="login-brand">
           <h1>QAForge</h1>
-
           <p>
             Test Management & Automation Platform
           </p>
         </div>
 
-
         {/* Login Heading */}
         <div className="login-heading">
           <h2>Welcome back</h2>
-
           <p>
             Sign in to continue to your account.
           </p>
         </div>
-
 
         {/* Login Form */}
         <form
           className="login-form"
           onSubmit={handleSubmit}
         >
-
           {/* Email */}
           <div className="login-field">
-
             <label htmlFor="email">
               Email address
             </label>
@@ -87,13 +77,10 @@ function Login() {
               required
               disabled={loading}
             />
-
           </div>
-
 
           {/* Password */}
           <div className="login-field">
-
             <label htmlFor="password">
               Password
             </label>
@@ -110,9 +97,7 @@ function Login() {
               required
               disabled={loading}
             />
-
           </div>
-
 
           {/* Error */}
           {error && (
@@ -123,7 +108,6 @@ function Login() {
               {error}
             </div>
           )}
-
 
           {/* Submit */}
           <button
@@ -140,9 +124,7 @@ function Login() {
               'Sign in'
             )}
           </button>
-
         </form>
-
 
         {/* Footer */}
         <div className="login-footer">
@@ -150,9 +132,7 @@ function Login() {
           <span>•</span>
           <span>Secure Access</span>
         </div>
-
       </div>
-
     </main>
   )
 }

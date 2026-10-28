@@ -1,12 +1,18 @@
+
 import { useNavigate } from 'react-router-dom'
+import apiClient from '../../api/client'
 
 function Header() {
   const navigate = useNavigate()
 
-  function handleLogout() {
-    sessionStorage.removeItem('access_token')
-
-    navigate('/login', { replace: true })
+  async function handleLogout() {
+    try {
+      await apiClient.post('/api/auth/logout')
+    } catch (error) {
+      console.error('Logout request failed:', error)
+    } finally {
+      navigate('/login', { replace: true })
+    }
   }
 
   return (
