@@ -7,6 +7,7 @@ from app.exceptions.test_case import TestCaseNotExecutableError, TestCaseNotFoun
 from app.exceptions.test_suite import TestSuiteNotFoundError
 from app.db.models.audit_log import Auditlog
 from app.db.unit_of_work import UnitOfWork
+from app.cache.dashboard import invalidate_all_dashboards
 
 class TestCaseService:
     def __init__(self, uow: UnitOfWork):
@@ -47,6 +48,7 @@ class TestCaseService:
         self.uow.commit()
         self.uow.db.refresh(result)
 
+        invalidate_all_dashboards()
         return result
 
     """
@@ -89,7 +91,8 @@ class TestCaseService:
                     raise TestCaseAlreadyExistsError("A Test case with this name already Exists")
                 raise
 
-            return test_case
+        invalidate_all_dashboards()
+        return test_case
 
     """
         This is GET Request
@@ -126,7 +129,8 @@ class TestCaseService:
                     raise TestCaseAlreadyExistsError("A Test case with this name already exists")
                 raise
 
-            return test_case
+        invalidate_all_dashboards()
+        return test_case
 
     """
         This is a PATCH Request
@@ -159,7 +163,8 @@ class TestCaseService:
                     raise TestCaseAlreadyExistsError("A Test case with this name already exists")
                 raise
 
-            return test_case
+        invalidate_all_dashboards()
+        return test_case
 
     """
         This is DELETE Request
@@ -174,3 +179,5 @@ class TestCaseService:
             self.uow.test_cases.delete(test_case)
 
             self.uow.commit()
+
+        invalidate_all_dashboards()

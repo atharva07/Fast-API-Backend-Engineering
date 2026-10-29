@@ -13,19 +13,13 @@ class DashboardService:
         user_role: str,
     ) -> DashboardResponse:
         cache_key = f"dashboard:{user_id}"
-
         cached_dashboard = get(cache_key)
 
         if cached_dashboard is not None:
-            print(
-                f"Dashboard cache HIT: {cache_key}"
-            )
+            print(f"Dashboard cache HIT: {cache_key}")
+            return DashboardResponse.model_validate(cached_dashboard)
 
-            return cached_dashboard
-
-        print(
-            f"Dashboard cache MISS: {cache_key}"
-        )
+        print(f"Dashboard cache MISS: {cache_key}")
 
         is_admin = user_role == UserRole.ADMIN.value
 
@@ -57,8 +51,6 @@ class DashboardService:
                 executions=executions,
             )
 
-            set(
-                cache_key,
-                dashboard
-            )
+            set(cache_key, dashboard.model_dump(mode="json"))
+
             return dashboard

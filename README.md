@@ -385,3 +385,7 @@ PostgreSQL connection.
     - Think of it as asking permission before proceeding
 
 ![alt text](image-8.png)
+
+# Caching Techniques
+
+![alt text](image-9.png)

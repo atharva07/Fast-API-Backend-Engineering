@@ -3,6 +3,7 @@ from app.db.unit_of_work import UnitOfWork
 from app.exceptions.project import ProjectNotFoundError
 from app.exceptions.test_suite import TestSuiteAlreadyExistsError, TestSuiteNotFoundError
 from sqlalchemy.exc import IntegrityError
+from app.cache.dashboard import invalidate_all_dashboards
 
 class TestSuiteService:
     def __init__(self, uow: UnitOfWork):
@@ -31,7 +32,8 @@ class TestSuiteService:
                     raise TestSuiteAlreadyExistsError("A Test Suite with this name already Exists")
                 raise
 
-            return suite
+        invalidate_all_dashboards()
+        return suite
 
     """
         This is a GET Request
@@ -82,7 +84,8 @@ class TestSuiteService:
                     raise TestSuiteAlreadyExistsError("A Test Suite with this name already Exists")
                 raise
 
-            return suite
+        invalidate_all_dashboards()
+        return suite
 
     """
         This is a PUT Request
@@ -106,7 +109,8 @@ class TestSuiteService:
                     raise TestSuiteAlreadyExistsError("A Test Suite with this name already Exists")
                 raise
 
-            return suite
+        invalidate_all_dashboards()
+        return suite
 
     """
         This is a DELETE Request
@@ -121,3 +125,5 @@ class TestSuiteService:
             self.uow.test_suites.delete(suite)
 
             self.uow.commit()
+
+        invalidate_all_dashboards()
