@@ -33,6 +33,7 @@ from app.routers.users import router as users_router
 from app.routers.auth import router as auth_router
 from app.routers.project_memberships import router as project_membership_router
 from app.routers.dashboard import router as dashboard_router
+from app.routers.rate_limit_test import router as rate_limit_test_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -181,4 +182,8 @@ app.include_router(
 
 app.include_router(
     dashboard_router
+)
+
+app.include_router(
+    rate_limit_test_router
 )

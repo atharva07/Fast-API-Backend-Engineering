@@ -105,7 +105,7 @@ DELETE Request
 """
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_project(project_id: int, current_user = Depends(require_project_permission(Permission.PROJECT_DELETE)), 
-                   uow: UnitOfWork = Depends(get_unit_of_work)):    
+                   uow: UnitOfWork = Depends(get_unit_of_work)):
     service = ProjectService(uow)
 
     service.delete_project(project_id=project_id)

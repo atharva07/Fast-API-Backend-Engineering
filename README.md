@@ -389,3 +389,28 @@ PostgreSQL connection.
 # Caching Techniques
 
 ![alt text](image-9.png)
+
+# Docker Communication for Internal and Communication from outside the container
+
+![alt text](image-10.png)
+
+    - Every business needs to have a story, why things needed to be done differently. Learn how to build a story that should be appealing to the users and VCs. 
+    - Moments when things bothered in our industry. In Startups, the env is usually a fast pased. Things needed to be shipped in day or two. No time for Testing and ensuring the quality of the product. Traditional Software testing takes time. We can speed up. but still testing takes time. So How do we ensure the quality ?
+    - We need a product that takes a responsibility of software testing. 
+    - Product that will handle long repatitive tasks involved in software testing for these startups. Product that will make be a critical part of Software Quality. 
+    - The product needs to solve one specific problem first and be a winning a product. This will help the product to stay in the game.
+    - Our product should not be an AI Wrapper.
+    - What will happen if at some point OpenAI stopped offering their models via API. Then how this business model will survive. It will be dead
+
+# Rate Limiting Algorithms
+
+    Criteria	     |   Fixed Window	   |    Sliding Window Log	  |     Sliding Window Counter
+    Accuracy	     |   Low at boundaries |    High / exact	      |     Approximate
+    Redis structure	 |   String counter	   |    Sorted Set	          |     Hash
+    Memory per user	 |   O(1)	           |    O(requests in window) |	    O(1)
+    Processing cost	 |   Very low	       |    Higher	              |     Low
+    Atomicity	     |   Lua script	       |    Lua script	          |     Lua script
+    Boundary burst	 |   Yes	           |    No	                  |     Reduced
+    Implementation	 |   Simple	           |    More complex	      |     Moderate
+
+![alt text](image-11.png)
