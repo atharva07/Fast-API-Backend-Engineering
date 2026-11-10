@@ -78,23 +78,27 @@ return {
 """
 
 class SlidingWindowCounterRateLimiter:
-    def __init__(self, limit: int, window_seconds: int):
+    def __init__(self, limit: int, window_seconds: int, namespace: str = "default"):
         if limit <= 0:
             raise ValueError("Limit must be greater than zero")
 
         if window_seconds <= 0:
             raise ValueError("Window must be greater than zero")
 
+        if not namespace.strip():
+            raise ValueError("Namespace cannot be empty")
+
         self.limit = limit
         self.window_seconds = window_seconds
         self.window_ms = window_seconds * 1000
+        self.namespace = namespace
 
         self.script = redis_client.register_script(
             SLIDING_COUNTER_SCRIPT
         )
 
-    def is_allowed(self, identifier: str) -> dict:
-        key = f"sliding_counter:{identifier}"
+    def is_allowed(self, identifier: str) -> RateLimitResult:
+        key = f"sliding_counter:{self.namespace}:{identifier}"
 
         now_ms = time.time_ns() // 1_000_000
 

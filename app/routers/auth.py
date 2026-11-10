@@ -6,6 +6,7 @@ from app.models.auth import LoginRequest, LoginResponse
 from app.services.auth import AuthService
 from app.services.session import SessionServices
 from app.security.dependencies import get_current_user
+from app.dependencies.rate_limit import create_rate_limit_dependency
 
 router = APIRouter(
     prefix="/api/auth",
@@ -22,10 +23,19 @@ COOKIE_SECURE = (
     os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
 )
 
+login_rate_limit_dependency = create_rate_limit_dependency(
+    algorithm="sliding_log",
+    limit=5,
+    window_seconds=60,
+    namespace="auth_login",
+    identifier_type="ip"
+)
+
 @router.post("/login", response_model=LoginResponse)
 def login(
     requests: LoginRequest, 
     response: Response, 
+    _rate_limit_result: dict = Depends(login_rate_limit_dependency),
     uow: UnitOfWork = Depends(get_unit_of_work)
 ):
     service = AuthService(uow)

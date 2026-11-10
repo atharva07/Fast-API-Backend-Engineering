@@ -413,4 +413,14 @@ PostgreSQL connection.
     Boundary burst	 |   Yes	           |    No	                  |     Reduced
     Implementation	 |   Simple	           |    More complex	      |     Moderate
 
+    - Rate limiting is implementing based on these types of identifiers
+        - IP-based: 192.168.1.10 -> Useful for public endpoints such as login, registration, and password-reset APIs.
+        - User-based: user:123 -> Useful for authenticated endpoints such as dashboard, projects, and test execution APIs.
+    
+    - In this project we will use:
+        1. IP-based limiting for public endpoints, such as login
+        2. User-based limiting for authenticated endpoints
+
 ![alt text](image-11.png)
+
+# Bitmask and Database locking patterns
