@@ -17,7 +17,8 @@ ROLE_PERMISSIONS: dict[UserRole, set[Permission]] = {
 
         Permission.TEST_CASE_VIEW,
         Permission.TEST_CASE_CREATE,
-        Permission.TEST_CASE_DELETE
+        Permission.TEST_CASE_DELETE,
+        Permission.TEST_CASE_EXECUTE
     },
 
     UserRole.DEVELOPER: {

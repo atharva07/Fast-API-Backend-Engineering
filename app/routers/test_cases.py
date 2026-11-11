@@ -7,10 +7,19 @@ from app.services.test_case import TestCaseService
 from app.security.authorization import require_suite_permission, require_test_case_permission
 from app.models.permission import Permission
 from app.db.models.user import User
+from app.dependencies.rate_limit import create_rate_limit_dependency
 
 router = APIRouter(
     prefix="/api", 
     tags=["Test Cases"]
+)
+
+execution_rate_limit_dependency = create_rate_limit_dependency(
+    algorithm="sliding_log",
+    limit=10,
+    window_seconds=60,
+    namespace="test_case_execution",
+    identifier_type="user"
 )
 
 """
@@ -101,7 +110,10 @@ def delete_test_case(test_case_id: int,
     POST Execute Request
 """
 @router.post("/test_cases/{test_case_id}/execute", response_model=TestResultResponse, status_code=status.HTTP_202_ACCEPTED)
-def execute_test_case(test_case_id: int, uow: UnitOfWork = Depends(get_unit_of_work)):
+def execute_test_case(test_case_id: int, 
+                    current_user: User = Depends(require_test_case_permission(Permission.TEST_CASE_EXECUTE)),
+                    _rate_limit_result: dict = Depends(execution_rate_limit_dependency),
+                    uow: UnitOfWork = Depends(get_unit_of_work)):
     service = TestCaseService(uow)
 
     result = service.execute_test_case(test_case_id)
